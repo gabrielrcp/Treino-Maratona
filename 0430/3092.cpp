@@ -1,38 +1,29 @@
 #include <cstdio>
+#include <vector>
 
-int s2, s3;
-int pot3[40], pot2[40];
-int qtd;
+using namespace std;
 
-int simplifica(int n)
-{
-  s2 = s3 = 0;
-  while(n % 2 == 0){
-    n /= 2;
-    s2++;
-  }
-  while(n % 3 == 0){
-    n /= 3;
-    s3++;
-  }
-  return n;
-}
+vector< pair<int, int> > resp;
+
 
 void resolve(long long n)
 {
-  qtd = 0;
-  if(n == 0)
-    return;
-
-  long long i = 1;
-  while((i<<1) < n)
-    i <<= 1;
-  for(; i > 0; i >>= 1){
-    if(3LL * i <= n){
-      n -= 
+  resp.clear();
+  int s = 0;
+  while(n > 0){
+    while(!(n&1)){
+      n = n >> 1;
+      s++;
     }
+    long long pot = 1;
+    int i = 0;
+    while(3LL*pot <= n){
+      pot *= 3LL;
+      i++;
+    }
+    n -= pot;
+    resp.push_back(make_pair(s, i));
   }
-  
 }
 
 int main()
@@ -43,11 +34,10 @@ int main()
     int n;
     scanf( "%d", &n);
 
-    n = simplifica(n);
-    resolve(n, 0, 0);
-    printf("%d %d", h, qtd);
-    for(int i = 0; i < qtd; i++)
-      printf(" [%d,%d]", pot2[i]+s2, pot3[i]+s3);
+    resolve(n);
+    printf("%d %d", h, resp.size());
+    for(int i = 0; i < resp.size(); i++)
+      printf(" [%d,%d]", resp[i].first, resp[i].second);
     printf("\n");
   }
   return 0;

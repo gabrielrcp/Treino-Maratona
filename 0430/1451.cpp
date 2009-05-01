@@ -7,16 +7,12 @@ using namespace std;
 
 #define MAX 101000
 
-vector<string> palavras;
-vector<int> probabi;
 
 struct no{
   char letra;
-  int maxarv;
   int cumarv;
   struct no *pai;
-  struct no *filhos[30];
-  int fimpal;
+  struct no *filhos[26];
 };
 
 no _nos[MAX];
@@ -38,30 +34,25 @@ inline no *novo_no(no *pai, char letra)
   no *r = &_nos[contanos];
 
   r->letra = letra;
-  for(int i = 0; i < 30; i++)
+  for(int i = 0; i < 26; i++)
     r->filhos[i] = NULL;
   r->pai = pai;
-  r->maxarv = r->cumarv = 0;
-  r->fimpal = -1;
+  r->cumarv = 0;
   contanos++;
   return r;
 }
 
-void insere(no *arv, int i, string pal, int prob)
+void insere(no *arv, string pal, int prob)
 {
   //cout << pal << " - " << pal.size() << endl;
-  arv->maxarv = max(arv->maxarv, prob);
   arv->cumarv += prob;
-
-  if(pal.size() == 0){
-    arv->fimpal = i;
+  if(pal.size() == 0)
     return;
-    
-  }
+  
   int l = pal[0]-'a';
   if(arv->filhos[l] == NULL)
     arv->filhos[l] = novo_no(arv, pal[0]);
-  insere(arv->filhos[l], i, pal.substr(1, pal.size()-1), prob);
+  insere(arv->filhos[l], pal.substr(1, pal.size()-1), prob);
 }
 
 void imprime(no *folha)
@@ -122,22 +113,14 @@ int main()
 
     int numpal;
     char buf[110];
+    contanos = 0;
+    no *arv = novo_no(NULL, ' ');
+
     scanf(" %d", &numpal);
-    palavras.clear();
-    probabi.clear();
     while(numpal--){
       int p;
       scanf(" %s %d", buf, &p);
-      palavras.push_back(buf);
-      probabi.push_back(p);
-    }
-
-    contanos = 0;
-    
-    no *arv = novo_no(NULL, ' ');
-    for(int i = 0; i < palavras.size(); i++){
-      insere(arv, i, palavras[i], probabi[i]);
-      //cout << palavras[i] << " " << probabi[i] << endl;
+      insere(arv, buf, p);
     }
     
     printf("Scenario #%d:\n", h);
