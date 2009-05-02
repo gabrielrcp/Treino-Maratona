@@ -4,22 +4,40 @@
 
 using namespace std;
 
+#define EPS 1.0e-9
+
 #define MAX 15
 
 double r[MAX];
 double cx[MAX], cy[MAX];
 double w;
 
-pair<double, double> interseccao(double x1, double y1, double r1,
-				 double x2, double y2, double r2)
+pair<double, double> interseccao2(double x1, double y1, double r1,
+				  double x2, double y2, double r2)
 {
   double dx = x2 - x1;
   double dy = y2 - y1;
   double D = sqrt(dx*dx + dy*dy);
   double E = (r1*r1 - r2*r2 + D*D)/(2.0*D);
   double F = sqrt(r1*r1 - E*E);
+
   return make_pair(x1 + (E*dx - F*dy)/D, y1 + (F*dx + E*dy)/D);
 }
+
+inline pair<double, double> interseccao(double x1, double y1, double r1,
+					double x2, double y2, double r2)
+{
+
+  pair<double, double> p1, p2;
+
+  p1 = interseccao2(x1, y1, r1, x2, y2, r2);
+  p2 = interseccao2(x2, y2, r2, x1, y1, r1);
+
+  if(p1.second > p2.second)
+    return p1;
+  return p2;
+}
+
 
 double distancia(double x1, double y1, double x2, double y2)
 {
@@ -36,25 +54,22 @@ double distancia(int i, int j)
 bool pode(double px, double py, double pr, int j, int k, int n)
 {
 
-  if(px - pr < 0 || px + pr > w)
-    return false;
-
-  if(k != -1 && (px - pr < 0.0 || px + pr > w))
+  if(px - pr < 0.0 || px + pr > w || py - pr < 0.0)
     return false;
   for(int i = 0; i < n; i++){
     if(i == j || i == k) continue;
     double dx = px - cx[i];
     double dy = py - cy[i];
-    if(r[i] + pr > sqrt(dx*dx+dy*dy))
+    if(r[i] + pr >= sqrt(dx*dx+dy*dy))
       return false;
   }
-
+  
   for(int i = 0; i < n; i++){
-    if(i == j || i == k) continue;
-    if(cy[i] > py && cx[i] - r[i] <= px+pr && px-pr <= cx[i] + r[i])
+    //if(i == j || i == k) continue;
+    if(cy[i] > py && cx[i] - r[i] <= px && px <= cx[i] + r[i])
       return false;
   }
-
+  
 
   return true;
 }
@@ -78,10 +93,11 @@ int main()
 
       double x = 1.0e10;
       double y = 1.0e10;
-      pair<double, double>  p1, p2, p;
+      pair<double, double>  p;
       double xat, yat;
 
 
+      // colocar no chao
       for(int j = 0; j < i; j++){
 	xat = cx[j] + 2 * sqrt(r[i] * r[j]);
 	yat = r[i];
@@ -91,30 +107,25 @@ int main()
 	}
       }
 	  
-
+      // colocar emcima de 2 bolas
       for(int j = 0; j < i; j++){
 	for(int k = j + 1; k < i; k++){
 	  if(2.0 * r[i] + r[j] + r[k] >= distancia(j, k)){
-	    p1 = interseccao(cx[j], cy[j], r[i]+r[j],
-			     cx[k], cy[k], r[i]+r[k]);
-	    p2 = interseccao(cx[k], cy[k], r[i]+r[k],
-			     cx[j], cy[j], r[i]+r[j]);
-	    if(p1.second > p2.second)
-	      p = p1;
-	    else
-	      p = p2;
+	    p = interseccao(cx[k], cy[k], r[i]+r[k],
+			    cx[j], cy[j], r[i]+r[j]);
 	    
-	    if(pode(p.first, p.second, r[i], j, k, i)){
-	      if(p.second < y){
-		x = p.first;
-		y = p.second;
-	      }
+	    if(pode(p.first, p.second, r[i], j, k, i) &&
+	       p.second < y){
+	      x = p.first;
+	      y = p.second;
 	    }
 	  }
 	}
       }
 
       for(int j = 0; j < i; j++){
+
+	// entre a bola j e a parede direita
 	if(cx[j] + r[j] + 2.0 * r[i] > w){
 	  xat = w - r[i];
 	  double dx = xat - cx[j];
@@ -124,7 +135,8 @@ int main()
 	    y = yat;
 	  }
 	}
-	
+
+	// entre a bola j e a parede esquerda
 	if(cx[j] - r[j] - 2.0 * r[i] < 0.0){
 	  xat = r[i];
 	  double dx = xat - cx[j];
@@ -135,6 +147,7 @@ int main()
 	  }
 	}
       }
+
       cx[i] = x;
       cy[i] = y;
       resp = max(y + r[i], resp);
