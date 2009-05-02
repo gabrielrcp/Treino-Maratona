@@ -1,44 +1,37 @@
 #include <cstdio>
+#include <vector>
 
-#define MAX 1010
+using namespace std;
 
-int pos[MAX][MAX][3];
-bool livre[MAX][3];
+vector<pair <int,int> > v;
 
 inline int resp(int n)
 {
   return (2*n+1) / 3;
 }
 
-void resolve()
+void resolve(int n)
 {
-  for(int n = 0; n < MAX; i++)
-    for(int j = 0; j < 3; j++)
-      livre[n][j] = true;
+  v.clear();
+  int r = resp(n);
+  int j = 1;
 
-  for(int n = 1; n < MAX; n++){
-    int r = resp(n);
-    if(r = resp(n-1)){
-      for(int i = 0; i < r; i++){
-	pos[n][i][0] = pos[n-1][i][0] + 1;
-	for(int j = 1; j < 3; j++)
-	  pos[n][i][j] = pos[n-1][i][j];
-      }
-
-      continue;
-    }
-
+  for(int i = n - r + 1; i <= n; i++){
+    v.push_back(make_pair(i, j));
+    j += 2;
+    if(j > i+1)
+      j = 2;
   }
 }
 
 void imprime(int h, int n)
 {
 
-  printf("%d %d %d", h, n, resp);
-  for(int i = 0; i < resp; i++){
+  printf("%d %d %d", h, n, v.size());
+  for(int i = 0; i < v.size(); i++){
     if(i % 8 == 0) printf("\n");
     else printf(" ");
-    printf("[%d,%d]", n-posicoes[n][i][0], posicoes[n][i][1]+1);
+    printf("[%d,%d]", v[i].first, v[i].second);
   }
   printf("\n\n");
 }
