@@ -2,7 +2,7 @@
 
 char permut[5][30];
 char posi[10];
-char texto[2][80];
+char texto[2][100];
 
 int p[10];
 
@@ -42,23 +42,23 @@ char inversa(char c, int i)
 
 char vai(char c)
 {
-  //printf("%c -> ", c);
   for(int i = 0; i < 5; i++)
     c = transforma(c, i);
   
   for(int i = 3; i >= 0; i--)
     c = inversa(c, i);
-  
-  //printf("%c\n", c);
+
   return c;
   
 }
 
 bool confere()
 {
+  int rodar[5];
   p[0] = 0;
   for(int i = 0; i < 4; i++){
     p[i+1] = posi[i] - 'a';
+    rodar[i+1] = 0;
   }
 
   
@@ -78,16 +78,19 @@ bool confere()
   for(int i = 0; texto[0][i] != '\0'; i++){
     if(texto[1][i] != vai(texto[0][i]))
       return false;
+
     int j = 1;
     while(j < 5){
-      p[j]++;
-      if(p[j] == 26){
-	p[j] = 0;
+      p[j] = (p[j] + 1) % 26;
+      rodar[j]++;
+      if(rodar[j] == 26){
+	rodar[j] = 0;
 	j++;
       }
       else
 	break;
-    }    
+    }
+       
   }
   return true;   
 }
