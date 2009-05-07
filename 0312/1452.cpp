@@ -36,6 +36,8 @@ bool chega(string nome, string o, string d, int dir)
   if(nome == d){
     if(ehponto(nome) && pontos[nome].front == o)
       return false;
+    if(!ehponto(nome) && sinais[nome].b == o)
+      return false;
     caminho.push_back(d);
     if(ehponto(nome)){
       if(pontos[nome].m == o)
@@ -132,8 +134,6 @@ void monta_caminho()
   reverse(cat.begin(), cat.end());
   reverse(dat.begin(), dat.end());
 
-  caminho.clear();
-  direcoes.clear();
 
   for(int i = 1; i < cat.size(); i++){
     if(dat[i] == 0) continue;
@@ -145,6 +145,8 @@ void monta_caminho()
       if(regras.find(make_pair(cat[i], cat[j])) == regras.end()) continue;
       int x = regras[make_pair(cat[i], cat[j])];
       if(dat[i] == x) break;
+      caminho.clear();
+      direcoes.clear();
       if(chega(cat[i], cat[i-1], cat[j], x)){
 	troca_caminho(cat, dat, i, j);
 	break;
@@ -208,6 +210,7 @@ int main()
     }
 
     printf("Scenario #%d:\n", h);
+
     if(!chega(origem, sinais[origem].a, destino, 0))
       printf("NOT POSSIBLE\n");
     else{
