@@ -32,7 +32,6 @@ bool interior_vazio()
 
 int inverte(int x)
 {
-  //printf("%x -> ", x);
   int y = 0;
   for(int i = 0; i < 6; i++){
     y <<= 1;
@@ -40,7 +39,6 @@ int inverte(int x)
       y |= 1;
     x >>= 1;
   }
-  //printf("%x\n", y);
   return y;
 }
 
@@ -53,13 +51,8 @@ inline bool match(int k1, int l1, int k2, int l2, bool orient)
     y = inverte(y);
   
 
-  if((x & y) || ((x | y | 0x21) != 63)){
-    /*
-    if(x == 0x12 && y == 0xc)
-      printf("%x %x\n", x, y);
-    */
+  if((x & y) || ((x | y | 0x21) != 63))
     return false;
-  }
   return true;
 }
 
@@ -82,35 +75,10 @@ void gira(int k)
   atual[k][2] = x;
 }
 
-
-bool conferecantos()
+bool tentarodar(int *perm)
 {
   int pri = 1;
   int ult = 1 << 5;
-  if(!((atual[0][1] & pri) | (atual[1][0] & pri) | (atual[3][2] & pri)))
-    return false;
-  if(!((atual[0][1] & ult) | (atual[1][3] & ult) | (atual[2][0] & pri)))
-    return false;
-  if(!((atual[1][0] & ult) | (atual[3][1] & ult) | (atual[4][0] & pri)))
-    return false;
-  if(!((atual[1][1] & ult) | (atual[2][0] & ult) | (atual[4][3] & ult)))
-    return false;
-  if(!((atual[3][0] & ult) | (atual[4][0] & ult) | (atual[5][0] & pri)))
-    return false;
-  if(!((atual[2][2] & ult) | (atual[4][2] & ult) | (atual[5][2] & pri)))
-    return false;
-  if(!((atual[0][0] & pri) | (atual[3][0] & pri) | (atual[5][0] & ult)))
-    return false;
-  if(!((atual[0][2] & pri) | (atual[2][2] & pri) | (atual[5][2] & ult)))
-    return false;
-
-  return true;
-}
-
-
-
-bool tentarodar(int *perm)
-{
 
   for(int j = 0; j < 4; j++)
     atual[1][j] = original[perm[0]][j];
@@ -134,6 +102,8 @@ bool tentarodar(int *perm)
 	continue;
       if(!match(1, 2, 2, 0, true))
 	continue;
+      if(!((atual[0][1] & ult) | (atual[1][3] & ult) | (atual[2][0] & pri)))
+	continue;
 
 
       for(int j = 0; j < 4; j++)
@@ -146,6 +116,8 @@ bool tentarodar(int *perm)
 	if(!match(0, 0, 3, 3, true))
 	  continue;
 	if(!match(1, 0, 3, 2, true))
+	  continue;
+	if(!((atual[0][1] & pri) | (atual[1][0] & pri) | (atual[3][2] & pri)))
 	  continue;
 
 	for(int j = 0; j < 4; j++)
@@ -161,6 +133,11 @@ bool tentarodar(int *perm)
 	    continue;
 	  if(!match(3, 1, 4, 0, false))
 	    continue;
+	  if(!((atual[1][0] & ult) | (atual[3][1] & ult) | (atual[4][0] & pri)))
+	    continue;
+	  if(!((atual[1][1] & ult) | (atual[2][0] & ult) | (atual[4][3] & ult)))
+	    continue;
+
 
 	  for(int j = 0; j < 4; j++)
 	    atual[5][j] = original[perm[4]][j];
@@ -178,8 +155,16 @@ bool tentarodar(int *perm)
 	    if(!match(4, 1, 5, 3, true))
 	      continue;
 
-	    if(conferecantos())
-	      return true;
+	    if(!((atual[3][0] & ult) | (atual[4][0] & ult) | (atual[5][0] & pri)))
+	      continue;
+	    if(!((atual[2][2] & ult) | (atual[4][2] & ult) | (atual[5][2] & pri)))
+	      continue;
+	    if(!((atual[0][0] & pri) | (atual[3][0] & pri) | (atual[5][0] & ult)))
+	      continue;
+	    if(!((atual[0][2] & pri) | (atual[2][2] & pri) | (atual[5][2] & ult)))
+	      continue;
+	    //if(conferecantos())
+	    return true;
 	  }
 	}
       }
@@ -241,17 +226,6 @@ int main()
   for(int h = 1; h <= casos; h++){
     printf("Scenario #%d:\n", h);
     ler();
-    /*
-    for(int k = 0; k < 6; k++){
-      for(int i = 0; i < 6; i++){
-	for(int j = 0; j < 6; j++)
-	  printf("%c", cubos[k][i][j]);
-	printf("\n");
-      }
-      printf("\n");
-    }
-    */
-
     if(resolve())
       printf("Yes\n\n");
     else
