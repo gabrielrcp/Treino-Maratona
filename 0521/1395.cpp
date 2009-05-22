@@ -1,13 +1,15 @@
 #include <cstdio>
 #include <set>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
-int tam[25];
+#define MAX 10010
+int tam[500];
 int n;
 
-set<int> possiveis;
+bool possiveis[MAX];
 typedef pair<int, int> frac;
 
 
@@ -30,11 +32,13 @@ frac reduz(frac f)
 
 void geratodos()
 {
-  possiveis.clear();
+  for(int i = 0; i < MAX; i++)
+    possiveis[i] = false;
+
   queue<int> Q;
   int x, y;
 
-  possiveis.insert(1);
+  possiveis[1] = true;
   Q.push(1);
 
   while(!Q.empty()){
@@ -43,22 +47,32 @@ void geratodos()
 
     for(int i = 0; i < n; i++){
       y =  x * tam[i];
-      if(y > 10000) continue;
-      if(possiveis.find(y) == possiveis.end()){
-	possiveis.insert(y);
+      if(y >= MAX) continue;
+      if(!possiveis[y]){
+	possiveis[y] = true;
 	Q.push(y);
       }
     }
   }
 }
 
-bool consegue(frac f)
+bool consegue(int a, int b)
 {
-  for(int i = 0; i < n; i++)
-    if(possiveis.find(f.first  * tam[i]) != possiveis.end() &&
-       possiveis.find(f.second * tam[i]) != possiveis.end())
+  for(int k = 1; a*k < MAX && b*k < MAX; k++)
+    if(possiveis[a*k] && possiveis[b*k])
       return true;
   return false;
+}
+
+void afina()
+{
+  sort(tam, tam+n);
+  for(int i = 0; i < n; i++){
+    for(int j = i+1; j < n; j++){
+      if(tam[j] % tam[i] == 0)
+	tam[j] /= tam[i];
+    }
+  }
 }
 
 int main()
@@ -75,8 +89,8 @@ int main()
     }
     for(int i = 0; i < n; i++)
       tam[i] /= c;
-   
 
+    afina();
     geratodos();
     
     printf("Scenario #%d:\n", h);
@@ -87,7 +101,7 @@ int main()
       int a, b;
       scanf(" %d %d", &a, &b);
       f = reduz(make_pair(a, b));
-      if(!consegue(f))
+      if(!consegue(f.first, f.second))
 	printf("Gear ratio %d:%d cannot be realized.\n", a, b);
       else
 	printf("Gear ratio %d:%d can be realized.\n", a, b);
