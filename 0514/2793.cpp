@@ -17,6 +17,8 @@ bool vis[MAX];
 int lbl[MAX];
 int pai[MAX];
 int conta;
+long long resposta = 1;
+
 
 inline void marcar(int i, int j)
 {
@@ -48,15 +50,19 @@ bool dfs(int i)
     else if(pai[i] != j && lbl[j] < lbl[i]){
       marcar(i, j);
       int a, b;
+      int conta = 1;
       a = i;
       while(a != j){
 	b = pai[a];
 	if(!ehponte(a, b)){
+	  resposta = 0;
 	  return false;
 	}
 	marcar(a, b);
 	a = b;
+	conta++;
       }
+      resposta *= (long long)conta + 1;
     }
   }
   return true;
@@ -71,21 +77,6 @@ bool conexo()
   return true;
 }
 
-vector<int> euler;
-
-void constroi_euler(int i)
-{
-  for(int k = 0; k < G[i].size(); k++){
-    int j = G[i][k];
-    if(ehponte(i, j)) continue;
-    apaga(i, j);
-    constroi_euler(j);
-    euler.push_back(j);
-    euler.push_back(i);
-  }
-}
-
-
 long long calcula()
 {
 
@@ -95,49 +86,12 @@ long long calcula()
     pai[i] = -1;
   }
 
-  if((!dfs(0)) || (!conexo()))
+  dfs(0);
+
+  if(!conexo())
     return 0;
 
-  for(int i = 0; i < n; i++)
-    vis[i] = false;
-  
-  long long r = 1;
-
-  for(int i = 0; i < n; i++){
-    if(vis[i])
-      continue;
-
-    euler.clear();
-    constroi_euler(i);
-    
-    if(euler.size() == 0) continue;
-    reverse(euler.begin(), euler.end());
-    
-    stack<int> P;
-    for(int k = 0; k <= euler.size(); k+=2){
-      int j;
-      if(k == euler.size())
-	j = euler[k-1];
-      else
-	j = euler[k];
-      if(vis[j]){
-	int conta = 1;
-	while(P.top() != j){
-	  vis[P.top()] = false;
-	  P.pop();
-	  conta++;
-	}
-	P.pop();
-	r *= (long long)(conta + 1);
-      }
-      P.push(j);
-      vis[j] = true;
-    }
-    for(int k = 0; k < euler.size(); k++)
-      vis[euler[k]] = true; 
-  }
-
-  return r;
+  return resposta;
 }
 
 
