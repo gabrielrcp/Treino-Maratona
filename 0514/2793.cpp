@@ -9,6 +9,10 @@ using namespace std;
 
 #define MAX 20010
 
+#define DIGI 2010
+#define MOD 10000
+
+
 vector< vector<int> > G;
 set< pair<int,int> > circuito;
 
@@ -17,22 +21,63 @@ bool vis[MAX];
 int lbl[MAX];
 int pai[MAX];
 int conta;
-long long resposta = 1;
+
+
+int resposta[DIGI];
+
+void setar(int x)
+{
+  for(int i = 0; i < DIGI; i++){
+    resposta[i] = x % MOD;
+    x /= MOD;
+  }
+}
+
+void multiplica(int x)
+{
+  int sobra = 0;
+  for(int i = 0; i < DIGI; i++){
+    resposta[i] *= x;
+    resposta[i] += sobra;
+    sobra = resposta[i] / MOD;
+    resposta[i] %= MOD;
+  }
+}
+
+void imprime()
+{
+  int i = DIGI-1;
+  while(i > 0 && resposta[i] == 0)
+    i--;
+
+  for(int j = i; j >= 0; j--){
+    int pot = MOD;
+    if(i != j)
+      while(pot > 10){
+	pot /= 10;
+	if(resposta[j] < pot)
+	  printf("0");
+	else
+	  break;
+      }
+    printf("%d", resposta[j]);
+  }
+  printf("\n");
+}
+
+
 
 
 inline void marcar(int i, int j)
 {
-  circuito.insert(make_pair(min(i,j),max(i,j)));
+  pair<int, int> P = make_pair(min(i,j), max(i,j));
+  circuito.insert(P);
 }
 
-inline bool ehponte(int i, int j)
+inline bool marcado(int i, int j)
 {
-  return (circuito.find(make_pair(min(i,j),max(i,j))) == circuito.end());
-}
-
-inline void apaga(int i, int j)
-{
-  circuito.erase(make_pair(min(i,j),max(i,j)));
+  pair<int, int> P = make_pair(min(i,j), max(i,j));
+  return (circuito.find(P) != circuito.end());
 }
 
 bool dfs(int i)
@@ -49,20 +94,18 @@ bool dfs(int i)
     }
     else if(pai[i] != j && lbl[j] < lbl[i]){
       marcar(i, j);
-      int a, b;
-      int conta = 1;
-      a = i;
+      int a = i;
+      int c = 1;
       while(a != j){
-	b = pai[a];
-	if(!ehponte(a, b)){
-	  resposta = 0;
+	if(marcado(a, pai[a])){
+	  setar(0);
 	  return false;
 	}
-	marcar(a, b);
-	a = b;
-	conta++;
+	marcar(a, pai[a]);
+	a = pai[a];
+	c++;
       }
-      resposta *= (long long)conta + 1;
+      multiplica(c + 1);
     }
   }
   return true;
@@ -71,13 +114,12 @@ bool dfs(int i)
 bool conexo()
 {
   for(int i = 0; i < n; i++)
-    if(!vis[i]){
+    if(!vis[i])
       return false;
-    }
   return true;
 }
 
-long long calcula()
+void calcula()
 {
 
   conta = 0;
@@ -85,13 +127,11 @@ long long calcula()
     vis[i] = false;
     pai[i] = -1;
   }
+  setar(1);
 
   dfs(0);
-
   if(!conexo())
-    return 0;
-
-  return resposta;
+    setar(0);
 }
 
 
@@ -99,7 +139,7 @@ int main()
 {
   int m;
   scanf(" %d %d", &n, &m);
-  G = vector < vector<int> > (n, vector<int> ());
+  G = vector < vector<int> > (n);
   circuito.clear();
 
   while(m--){
@@ -114,6 +154,8 @@ int main()
       i = j;
     }
   }
-  printf("%lld\n", calcula());
+
+  calcula();
+  imprime();
   return 0;
 }
