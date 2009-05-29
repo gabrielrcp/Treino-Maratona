@@ -28,8 +28,8 @@ void ler()
     case '.':
     case '!':
     case '?':
-      break;
       at += strlen(buf);
+      break;
     default:
       if(at != 0)
 	v.push_back(at);
@@ -50,7 +50,7 @@ int area(int n)
   for(int i = 0; i < v.size(); i++){
     if(v[i] > n)
       return INF;
-    if(c + v[i] < n)
+    if(c + v[i] <= n)
       c += v[i] + 1;
     else{
       c = v[i] + 1;
