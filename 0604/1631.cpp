@@ -18,7 +18,7 @@ struct no{
 
 no *tree;
 int conta_no;
-no _nos[10*MAX];
+no _nos[3*MAX];
 
 no *novo()
 {
@@ -26,36 +26,28 @@ no *novo()
 }
 
 
-void monta()
+no *monta(int a, int b)
 {
-  no *at, *bt, *ct;
-  conta_no = 0;
-  queue<no *> Q;
-  for(int i = 0; i < n; i++){
-    at = novo();
-    at->a = at->b = i;
-    at->v = 0;
-    at->e = at->d = NULL;
-    Q.push(at);
-  }
+  no *x;
 
-  while(1){
-    at = Q.front(); Q.pop();
-    if(Q.empty()){
-      tree = at;
-      return;
-    }
-    bt = Q.front(); Q.pop();
-    ct = novo();
-    ct->a = min(at->a, bt->a);
-    ct->b = max(at->b, bt->b);
-    ct->v = 0;
-    ct->e = at;
-    ct->d = bt;
-    Q.push(ct);
-  }
+  if(a > b)
+    return NULL;
+
+  x = novo();
+  x->a = a;
+  x->b = b;
+  x->v = 0;
+  x->e = x->d = NULL;
+
+  if(a == b)
+    return x;
+
+  int m = (a+b)/2;
+  x->e = monta(a, m);
+  x->d = monta(m+1, b);
+
+  return x;
 }
-
 
 int maximo(int a, int b, no *arv)
 {
@@ -83,37 +75,18 @@ void insere(int x, int i, no *arv)
   }
 }
 
-void imprime(no *arv)
-{
-  if(arv == NULL)
-    return;
-
-  printf("-- %d %d %d\n", arv->a, arv->b, arv->v);
-
-  imprime(arv->e);
-  imprime(arv->d);
-}
-
-
 int vai()
 {
   int r = 1;
-
-  monta();
+  
+  conta_no = 0;
+  tree = monta(0, n-1);
 
   for(int i = n-1; i >= 0; i--){
-    int at = maximo(v[i], n, tree) + 1;
+    int at = maximo(v[i], n-1, tree) + 1;
     insere(at, v[i], tree);
-      /*
-    resp[i] = 1;
-    for(int j = i + 1; j < n; j++)
-      if(v[j] > v[i])
-	resp[i] = max(resp[i], resp[j]+1);
-      */
     r = max(r, at);
   }
-  //imprime(tree);
-
   return r;
 }
 
