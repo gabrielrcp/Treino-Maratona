@@ -1,0 +1,41 @@
+<html><body bgcolor="#ffffff" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Our barbershop opens at 9:00 am and closes at 5:00 pm, but (of course) the
+barber keeps working until all the customers who entered the shop before 5:00 have been
+served.  Each customer enters the shop and if the barber is free, immediately starts
+getting his hair cut. Otherwise, the customer waits until everyone who entered before
+him has finished getting their hair cut. 
+<p>
+We have the sequence of times when customers entered the shop and we know when
+the last customer left the shop. We also know that each haircut took at least
+5 minutes. We want to get a bound on how long the longest haircut took.
+</p><p>
+Create a class HairCuts that contains a method maxCut that is given vector &lt;string&gt;
+<b>enter</b> and string <b>lastExit</b> and that returns the smallest possible time (in
+minutes) that
+the longest haircut took. If the inputs are inconsistent with the rule that
+each haircut takes at least 5 minutes, return -1.
+</p><p>
+The <b>enter</b> times and the <b>lastExit</b> are 5 character strings in the format hh:mm with hh being a 12 hour time.
+</p>
+</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>HairCuts</td></tr><tr><td>Method:</td><td>maxCut</td></tr><tr><td>Parameters:</td><td>vector &lt;string&gt;, string</td></tr><tr><td>Returns:</td><td>double</td></tr><tr><td>Method signature:</td><td>double maxCut(vector &lt;string&gt; enter, string lastExit)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td>&#160;&#160;&#160;&#160;</td></tr><tr><td></td></tr><tr><td colspan="2"><h3>Notes</h3></td></tr><tr><td align="center" valign="top">-</td><td>The returned value must be accurate to within a relative or absolute value of 1E-9.</td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>lastExit</b> and all elements of <b>enter</b> are formatted as described in the statement.</td></tr><tr><td align="center" valign="top">-</td><td><b>enter</b> contains between 1 and 50 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each hh in <b>enter</b> will equal &quot;09&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;01&quot;,&quot;02&quot;,&quot;03&quot;, or &quot;04.</td></tr><tr><td align="center" valign="top">-</td><td>The hh in <b>lastExit</b> will equal &quot;09&quot;,&quot;10&quot;,&quot;11&quot;,&quot;12&quot;,&quot;01&quot;,...,&quot;05&quot;, or &quot;06&quot;.</td></tr><tr><td align="center" valign="top">-</td><td>Each time will have mm equal to &quot;00&quot;,&quot;01&quot;,...,&quot;58&quot;, or &quot;59&quot;.</td></tr><tr><td align="center" valign="top">-</td><td><b>lastExit</b> will be a time that is later than every <b>enter</b> time.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;04:22&quot;,&quot;09:00&quot;}</pre></td></tr><tr><td><pre>&quot;05:52&quot;</pre></td></tr></table></td></tr><tr><td><pre>Returns: 90.0</pre></td></tr><tr><td><table><tr><td colspan="2">
+
+   At 9:00 the first customer entered. The last (second) customer entered at
+   4:22 and was not done until 5:52. For the first customer to have delayed
+   the second customer his cut would have to have taken more than 7 hours. So
+   the smallest time for the longest haircut occurs when the first customer
+   has a short cut, and the second customer is getting his hair cut all the
+   time he is in the shop (from 4:22 to 5:52) which is 90 minutes.
+
+
+
+
+
+</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;09:00&quot;,&quot;09:22&quot;,&quot;09:22&quot;}</pre></td></tr><tr><td><pre>&quot;10:11&quot;</pre></td></tr></table></td></tr><tr><td><pre>Returns: 23.666666666666863</pre></td></tr><tr><td><table><tr><td colspan="2">
+
+   If the first customer's cut takes 23 2/3 minute then the second and third
+   customers are already waiting. They could both take the same amount of time.
+   Since this keeps the barber busy all the time with 3 equal length haircuts,
+   this must be the smallest time for the longest haircut.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;09:00&quot;,&quot;04:00&quot;,&quot;04:02&quot;}</pre></td></tr><tr><td><pre>&quot;04:09&quot;</pre></td></tr></table></td></tr><tr><td><pre>Returns: -1.0</pre></td></tr><tr><td><table><tr><td colspan="2">
+
+   This data would require two customers to get haircuts between 4:00 and 4:09
+   and that would violate the rule that each haircut takes at least 5 minutes.
+</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{  &quot;04:40&quot;, &quot;10:54&quot;, &quot;12:30&quot;, &quot;03:46&quot;, &quot;04:48&quot;, &quot;01:57&quot;, &quot;04:47&quot;, &quot;10:29&quot;, &quot;10:39&quot;} </pre></td></tr><tr><td><pre>&quot;05:21&quot;</pre></td></tr></table></td></tr><tr><td><pre>Returns: 13.6666666666669</pre></td></tr><tr><td></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

@@ -1,0 +1,52 @@
+<html><body bgcolor="#ffffff" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Fabian is in charge of a law firm working on an important case.  For a case coming up, he needs a specific folder which is stored in one of the filing cabinets arranged in a line against the wall of the records room.  He has assigned a number of workers to find the folder from the filing cabinets.  He doesn't want the workers to get in each other's way, nor does he want folders from different filing cabinets getting mixed up, so he has decided to partition the cabinets, and assign a specific section to each worker.  Each worker will have at least 1 cabinet to search through.<br></br>
+<br></br>
+More specifically, Fabian wants to divide the line of filing cabinets into N sections (where N is the number of workers) so that every cabinet that the <i>i</i>th worker looks through is earlier in the line than every cabinet that the <i>j</i>th worker has to look through, for <i>i</i> &lt; <i>j</i>.<br></br>
+<br></br>
+His initial thought was to make all the sections equal, giving each worker the same number of filing cabinets to look through, but then he realized that the filing cabinets differed in the number of folders they contained.  He now has decided to partition the filing cabinets so as to minimize the maximum number of folders that a worker would have to look through.  For example, suppose there were three workers and nine filing cabinets with the following number of folders:<br></br>
+<ol><li>10 20 30 40 50 60 70 80 90</li></ol>
+<br></br>
+He would divide up the filing cabinets into the following sections:<br></br>
+<ol><li>10 20 30 40 50 | 60 70 | 80 90</li></ol>
+<br></br>
+The worker assigned to the first section would have to look through 150 folders. The worker assigned to the second section would have to search through 130 folders, and the last worker would filter through 170 folders. In this partitioning, the maximum number of folders that a worker looks through is 170.  No other partitioning has less than 170 folders in the largest partition.<br></br>
+<br></br>
+Write a class FairWorkload with a method getMostWork which takes a vector &lt;int&gt; <b>folders</b> (the number of folders for each filing cabinet) and an int <b>workers</b> (the number of workers).  The method should return an int which is the maximum amount of folders that a worker would have to look through in an optimal partitioning of the filing cabinets.  For the above example, the method would have returned 170.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>FairWorkload</td></tr><tr><td>Method:</td><td>getMostWork</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, int</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int getMostWork(vector &lt;int&gt; folders, int workers)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td>&#160;&#160;&#160;&#160;</td></tr><tr><td></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>folders</b> will contain between 2 and 15 elements, inclusive</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>folders</b> will be between 1 and 1000, inclusive</td></tr><tr><td align="center" valign="top">-</td><td><b>workers</b> will be between 1 and the number of elements in <b>folders</b>, inclusive</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{ 10, 20, 30, 40, 50, 60, 70, 80, 90 }</pre></td></tr><tr><td><pre>3</pre></td></tr></table></td></tr><tr><td><pre>Returns: 170</pre></td></tr><tr><td><table><tr><td colspan="2">This is the example from above.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{ 10, 20, 30, 40, 50, 60, 70, 80, 90 }</pre></td></tr><tr><td><pre>5</pre></td></tr></table></td></tr><tr><td><pre>Returns: 110</pre></td></tr><tr><td><table><tr><td colspan="2">With the addition of two more workers, it makes more sense to partition the books as follows:<br></br>
+<pre>
+	10 20 30 40 | 50 60 | 70 | 80 | 90
+</pre>
+<br></br>
+The most folders that any single worker must look through will be 110.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{ 568, 712, 412, 231, 241, 393, 865, 287, 128, 457, 238, 98, 980, 23, 782 }</pre></td></tr><tr><td><pre>4</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1785</pre></td></tr><tr><td><table><tr><td colspan="2">The filing cabinets should be partitioned as follows:
+<pre>
+	568 712 412 | 231 241 393 865 | 287 128 457 238 98 | 980 23 782
+</pre></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1000 }</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1000</pre></td></tr><tr><td><table><tr><td colspan="2">The only fair partitioning gives the 14 cabinets with 1 folder to one worker, and the last cabinet with 1000 folders to the other worker.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{ 50, 50, 50, 50, 50, 50, 50 }</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: 200</pre></td></tr><tr><td><table><tr><td colspan="2">There are two valid partitions:<pre>
+	50 50 50 | 50 50 50 50
+	50 50 50 50 | 50 50 50
+</pre><br></br>
+Both of these partitions result in a maximum of 200 folders for any worker.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1,1,1,1,100}</pre></td></tr><tr><td><pre>5</pre></td></tr></table></td></tr><tr><td><pre>Returns: 100</pre></td></tr><tr><td><table><tr><td colspan="2">With 5 workers, each worker gets a filing cabinet, and the most folders that any worker has to look through will be 100.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">6)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{ 950, 650, 250, 250, 350, 100, 650, 150, 150, 700 }</pre></td></tr><tr><td><pre>6</pre></td></tr></table></td></tr><tr><td><pre>Returns: 950</pre></td></tr><tr><td><table><tr><td colspan="2">With 6 workers, the maximum amount of folders that any worker would have to look through is 950.  There are 25 different ways of partitioning the filing cabinets to produce this maximum:
+<pre>
+	950 | 650 | 250 | 250 350 | 100 650 150 | 150 700
+	950 | 650 | 250 | 250 350 100 | 650 150 | 150 700
+	950 | 650 | 250 | 250 350 100 | 650 150 150 | 700
+	950 | 650 | 250 250 | 350 | 100 650 150 | 150 700
+	950 | 650 | 250 250 | 350 100 | 650 150 | 150 700
+	950 | 650 | 250 250 | 350 100 | 650 150 150 | 700
+	950 | 650 | 250 250 350 | 100 | 650 150 | 150 700
+	950 | 650 | 250 250 350 | 100 | 650 150 150 | 700
+	950 | 650 | 250 250 350 | 100 650 | 150 | 150 700
+	950 | 650 | 250 250 350 | 100 650 | 150 150 | 700
+	950 | 650 | 250 250 350 | 100 650 150 | 150 | 700
+	950 | 650 | 250 250 350 100 | 650 | 150 | 150 700
+	950 | 650 | 250 250 350 100 | 650 | 150 150 | 700
+	950 | 650 | 250 250 350 100 | 650 150 | 150 | 700
+	950 | 650 250 | 250 | 350 | 100 650 150 | 150 700
+	950 | 650 250 | 250 | 350 100 | 650 150 | 150 700
+	950 | 650 250 | 250 | 350 100 | 650 150 150 | 700
+	950 | 650 250 | 250 350 | 100 | 650 150 | 150 700
+	950 | 650 250 | 250 350 | 100 | 650 150 150 | 700
+	950 | 650 250 | 250 350 | 100 650 | 150 | 150 700
+	950 | 650 250 | 250 350 | 100 650 | 150 150 | 700
+	950 | 650 250 | 250 350 | 100 650 150 | 150 | 700
+	950 | 650 250 | 250 350 100 | 650 | 150 | 150 700
+	950 | 650 250 | 250 350 100 | 650 | 150 150 | 700
+	950 | 650 250 | 250 350 100 | 650 150 | 150 | 700
+</pre></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

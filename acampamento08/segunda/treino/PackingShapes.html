@@ -1,0 +1,27 @@
+<html><body bgcolor="#ffffff" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+Little Timmy has a rectangular frame and several shapes cut out from cardboard. He tries to fit each of the shapes into the frame (one shape at a time). Sometimes the piece fits easily, sometimes it is clear that the shape is too big to fit... and sometimes Timmy just doesn't know. Then he always comes to ask you for help.
+</p>
+
+<p>
+You decided to write a program that will answer Timmy's questions.
+</p>
+
+<p>
+You will be given the <b>width</b> and <b>height</b> of the frame and a vector &lt;string&gt; <b>shapes</b> describing Tommy's shapes. Each of the shapes is either a circle or a rectangle. 
+Each element of <b>shapes</b> is of the one of the following forms: 
+<ul> <li> &quot;<tt>CIRCLE RADIUS</tt>&quot;, where <tt>RADIUS</tt> is the radius of the circle. </li> <li> &quot;<tt>RECTANGLE WIDTH LENGTH</tt>&quot;, where <tt>WIDTH</tt> and <tt>LENGTH</tt> are the dimensions of the rectangle. </li> </ul>
+</p>
+
+<p>
+Your method is supposed to return a  vector &lt;string&gt; <b>results</b>, where the i-th element of <b>results</b> is &quot;YES&quot; or &quot;NO&quot;, depending on whether the i-th shape fits into the empty frame.  
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>PackingShapes</td></tr><tr><td>Method:</td><td>tryToFit</td></tr><tr><td>Parameters:</td><td>int, int, vector &lt;string&gt;</td></tr><tr><td>Returns:</td><td>vector &lt;string&gt;</td></tr><tr><td>Method signature:</td><td>vector &lt;string&gt; tryToFit(int width, int height, vector &lt;string&gt; shapes)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td>&#160;&#160;&#160;&#160;</td></tr><tr><td></td></tr><tr><td colspan="2"><h3>Notes</h3></td></tr><tr><td align="center" valign="top">-</td><td>The shapes may be rotated arbitrarily.</td></tr><tr><td align="center" valign="top">-</td><td>The shapes may touch the frame, and they may even have a common part of the boundary.</td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>width</b> and <b>height</b> are between 1 and 1000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>shapes</b> contains between 1 and 50 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>shapes</b> is of one of the following forms: <ul> <li> &quot;<tt>CIRCLE RADIUS</tt>&quot;</li> <li> &quot;<tt>RECTANGLE WIDTH LENGTH</tt>&quot;</li> </ul></td></tr><tr><td align="center" valign="top">-</td><td>All numbers in <b>shapes</b> are integers between 1 and 1000, inclusive, with no leading zeroes.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>100</pre></td></tr><tr><td><pre>100</pre></td></tr><tr><td><pre>{&quot;RECTANGLE 3 3&quot;, 
+ &quot;RECTANGLE 3 230&quot;,
+ &quot;RECTANGLE 140 1&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;YES&quot;, &quot;NO&quot;, &quot;YES&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2">The first rectangle clearly fits, but the second one clearly doesn't. The third one can be placed inside the frame after it is rotated 45 degrees.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>100</pre></td></tr><tr><td><pre>100</pre></td></tr><tr><td><pre>{&quot;RECTANGLE 100 100&quot;,
+ &quot;CIRCLE 50&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;YES&quot;, &quot;YES&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2">Touching the frame is allowed.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>10</pre></td></tr><tr><td><pre>100</pre></td></tr><tr><td><pre>{&quot;RECTANGLE 99 9&quot;,
+ &quot;CIRCLE 22&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;YES&quot;, &quot;NO&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2">The rectangle can be rotated, but the circle is too large.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>170</pre></td></tr><tr><td><pre>900</pre></td></tr><tr><td><pre>{&quot;RECTANGLE 200 700&quot;,
+ &quot;RECTANGLE 3 910&quot;,
+ &quot;RECTANGLE 1000 7&quot;,
+ &quot;CIRCLE 5&quot;,
+ &quot;CIRCLE 50&quot;,
+ &quot;CIRCLE 500&quot;,
+ &quot;RECTANGLE 1000 99&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;NO&quot;, &quot;YES&quot;, &quot;NO&quot;, &quot;YES&quot;, &quot;YES&quot;, &quot;NO&quot;, &quot;NO&quot; }</pre></td></tr><tr><td></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

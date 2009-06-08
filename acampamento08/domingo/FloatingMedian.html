@@ -1,0 +1,48 @@
+<html><head><title>FloatingMedian</title></head><body  ><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+In meteorology, a common statistical tool is the <i>median</i> of a given set of measurements. 
+(You can find a definition of the median in the Notes section.)
+</p>
+
+<p>
+You are writing software for a device that measures temperature once a second.
+The device has a small digital display. At any moment, the display has to show
+the median of temperatures measured in the last <b>K</b> seconds.
+</p>
+
+<p>
+Before you upload your software into the device, you would like to test it
+on a computer.
+</p>
+
+<p>
+Instead of measuring temperatures, we will use a random number generator (RNG)
+to generate fake temperatures.
+Given three ints <b>seed</b>, <b>mul</b> and <b>add</b>, we define a sequence
+of temperatures:
+</p>
+
+<ul>
+<li> t<sub>0</sub> = <b>seed</b> </li>
+<li> t<sub>k+1</sub> = (t<sub>k</sub> * <b>mul</b> + <b>add</b>) mod 65536 </li>
+</ul>
+
+<p>
+In addition to the parameters of the RNG, you
+will be given two ints <b>N</b> and <b>K</b>.
+</p>
+
+<p>
+Consider the sequence containing the first <b>N</b> temperatures generated
+by the RNG (i.e., values t<sub>0</sub> to t<sub>N-1</sub>).
+This sequence has <b>N</b>-<b>K</b>+1 contiguous subsequences of length
+<b>K</b>. For each such subsequence compute its median.
+</p>
+
+<p>
+Your method will be given the numbers <b>seed</b>, <b>mul</b>, <b>add</b>, <b>N</b>,
+and <b>K</b>. Compute all the medians as described above, and return a long long containing their sum.
+</p>
+</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>FloatingMedian</td></tr><tr><td>Method:</td><td>sumOfMedians</td></tr><tr><td>Parameters:</td><td>int, int, int, int, int</td></tr><tr><td>Returns:</td><td>long long</td></tr><tr><td>Method signature:</td><td>long long sumOfMedians(int seed, int mul, int add, int N, int K)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td>&#160;&#160;&#160;&#160;</td></tr><tr><td></td></tr><tr><td colspan="2"><h3>Notes</h3></td></tr><tr><td align="center" valign="top">-</td><td>Given <b>K</b> numbers, their median is the ((<b>K</b>+1)/2)-th smallest of them, rounding down for even <b>K</b>, and indexing from 1.<br></br> For example, the median of (1, 2, 6, 5, 4, 3) is 3, and the median of (11, 13, 12, 14, 15) is 13.</td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>seed</b>, <b>mul</b>, and <b>add</b> are between 0 and 65535, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>N</b> is between 1 and 250,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>K</b> is between 1 and 5,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>N</b> is greater than or equal to <b>K</b>.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>3</pre></td></tr><tr><td><pre>1</pre></td></tr><tr><td><pre>1</pre></td></tr><tr><td><pre>10</pre></td></tr><tr><td><pre>3</pre></td></tr></table></td></tr><tr><td><pre>Returns: 60</pre></td></tr><tr><td><table><tr><td colspan="2">The generated temperatures are: 3, 4, 5, 6, 7, 8, 9, 10, 11, and 12.<br></br>
+The length-3 contiguous subsequences are (3, 4, 5), (4, 5, 6), ..., and (10, 11, 12).<br></br>
+Their medians are 4, 5, ..., 11.<br></br>
+The sum of these medians is 4+5+...+11 = 60.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>10</pre></td></tr><tr><td><pre>0</pre></td></tr><tr><td><pre>13</pre></td></tr><tr><td><pre>5</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: 49</pre></td></tr><tr><td><table><tr><td colspan="2">This time the generated temperatures are 10, 13, 13, 13, and 13. The medians you should compute are 10, 13, 13, and 13.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>4123</pre></td></tr><tr><td><pre>2341</pre></td></tr><tr><td><pre>1231</pre></td></tr><tr><td><pre>7</pre></td></tr><tr><td><pre>3</pre></td></tr></table></td></tr><tr><td><pre>Returns: 102186</pre></td></tr><tr><td><table><tr><td colspan="2">Generated temperatures: 4123, 19382, 23581, 23040, 1743, 18362, 60593.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>47</pre></td></tr><tr><td><pre>5621</pre></td></tr><tr><td><pre>1</pre></td></tr><tr><td><pre>125000</pre></td></tr><tr><td><pre>1700</pre></td></tr></table></td></tr><tr><td><pre>Returns: 4040137193</pre></td></tr><tr><td><table><tr><td colspan="2">A quite large random test case.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>32321</pre></td></tr><tr><td><pre>46543</pre></td></tr><tr><td><pre>32552</pre></td></tr><tr><td><pre>17</pre></td></tr><tr><td><pre>17</pre></td></tr></table></td></tr><tr><td><pre>Returns: 25569</pre></td></tr><tr><td><table><tr><td colspan="2">Watch out for integer overflow when generating the temperatures.</td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

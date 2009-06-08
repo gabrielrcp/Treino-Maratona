@@ -1,0 +1,84 @@
+#include <cstdio>
+#include <vector>
+
+#define MAX 1000010
+
+using namespace std;
+
+bool crivo[MAX];
+vector<int> primos;
+int lim;
+
+
+int a[MAX];
+
+long long memo[MAX];
+
+void geraprimos()
+{
+  primos.clear();
+  for(int i = 0; i <=MAX; i++)
+    crivo[i] = true;
+  for(int i = 2; i*i <= MAX; i++){
+    if(!crivo[i]) continue;
+    primos.push_back(i);
+    for(int j = i+i; j <= MAX; j += i)
+      crivo[j] = false;
+  }
+}
+
+long long vai(int b)
+{
+  if(b > lim){
+    return 0;
+  }
+  long long &r = memo[b];
+  if(r != -1)
+    return r;
+  r = a[b];
+  for(int i = 0; i < primos.size(); i++)
+    r += vai(primos[i] * b);
+  printf("-%d %lld\n", b, r);
+  return r;
+}
+
+
+
+int main()
+{
+
+  int n, m;
+  geraprimos();
+
+
+  while(scanf(" %d", &n) == 1){
+    vector<int> v;
+    int x;
+    lim = 1;
+    for(int i = 0; i < n; i++){
+      scanf(" %d", &x);
+      v.push_back(x);
+      lim = max(x, lim);
+    }
+
+    for(int i = 0; i <= lim; i++)
+      a[i] = 0;
+    for(int i = 0; i < v.size(); i++)
+      a[v[i]]++;
+
+    for(int i = 0; i <= lim; i++)
+      memo[i] = -1;
+
+    scanf(" %d", &m);
+    long long r = 0;
+    for(int i = 0; i < m; i++){
+      int b;
+      scanf(" %d", &b);
+      r += vai(b);
+      //printf("-%d - %lld\n", b, vai(b));
+    }
+    printf("%lld\n", r);
+
+  }
+  return 0;
+}

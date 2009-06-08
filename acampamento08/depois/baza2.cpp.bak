@@ -1,0 +1,113 @@
+#include <cstdio>
+#include <cstring>
+
+struct letra{
+  int v;
+  struct letra *prox[30];
+};
+
+#define MAX 30010
+
+letra temp[40*MAX];
+int atual;
+int n;
+
+letra *novo()
+{
+  for(int i = 0; i < 30; i++)
+    temp[atual].prox[i] = NULL;
+  temp[atual].v = 0;
+  return &temp[atual++];
+}
+
+
+void insere(char *s, letra *arv, int cnt)
+{
+  if(*s == '\0'){
+    arv->prox[29] = novo();
+    arv->prox[29]->v = cnt;
+    return;
+  }
+
+  int j = *s - 'a';
+  if(arv->prox[j] == NULL)
+    arv->prox[j] = novo();
+  arv->prox[j]->v++;
+  insere(s+1, arv->prox[j], cnt + arv->prox[j]->v);
+  
+}
+
+
+int consulta(char *s, letra *arv)
+{
+  int r = 0;
+  while(*s != '\0'){
+    int j = *s - 'a';
+    arv = arv->prox[j];
+    if(arv == NULL) return r+n;
+    r += arv->v;
+    s++;
+  }
+  if(arv->prox[29] == NULL) return r+n;
+  return arv->prox[29]->v;
+}
+
+
+void imprime(letra *arv, char *s, int p)
+{
+  if(arv == NULL)
+    return;
+  for(int i = 0; i < p; i++)
+    printf("%c", s[i]);
+  printf(" %d\n", arv->v);
+  for(int i = 0; i < 29; i++){
+    if(arv->prox[i] != NULL){
+      s[p] = i + 'a';
+      imprime(arv->prox[i], s, p+1);
+    }
+  }
+}
+
+
+void imprime2(letra *arv, char *s, int p)
+{
+  if(arv == NULL)
+    return;
+  
+  if(arv->prox[29] != NULL){
+    for(int i = 0; i < p; i++)
+      printf("%c", s[i]);
+    printf(" %d\n", arv->prox[29]->v);
+  }
+  
+  for(int i = 0; i < 29; i++){
+    s[p] = i + 'a';
+    imprime2(arv->prox[i], s, p+1);
+  }
+}
+
+
+int main()
+{
+  int q;
+  char buf[40];
+
+  while(scanf(" %d", &n) == 1){
+    atual = 0;
+    letra *arv = novo();
+    for(int i = 1; i <= n; i++){
+      scanf(" %s", buf);
+      insere(buf, arv, i);
+      //imprime(arv, buf, 0);
+      //printf("\n");
+    }
+    //imprime(arv, buf, 0);
+    //imprime2(arv, buf, 0);
+    scanf(" %d", &q);
+    for(int i = 0; i < q; i++){
+      scanf(" %s", buf);
+      printf("%d\n", consulta(buf, arv));
+    }
+  }
+  return 0;
+}
