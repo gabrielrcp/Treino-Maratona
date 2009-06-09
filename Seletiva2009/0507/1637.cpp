@@ -30,7 +30,7 @@ bool acha_caminho(int s, int t)
 
     for(int j = 0; j <= n+1; j++){
       if(i == j) continue;
-      if(ant[j] == -1 && 0 <= fluxo[i][j] && fluxo[i][j] < dupla[i][j]){
+      if(ant[j] == -1 && fluxo[i][j] < dupla[i][j]){
 	Q.push(j);
 	ant[j] = i;
       }
