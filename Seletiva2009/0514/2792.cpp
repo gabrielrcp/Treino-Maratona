@@ -32,30 +32,37 @@ char expr[MAX];
 
 no *avalia()
 {
-
   stack<char> op;
   stack<no *> final;
-
   no *temp;
 
+  int n = strlen(expr);
+  expr[n] = ')';
   op.push('(');
-  for(int i = 0; expr[i] != '\0'; i++){
+
+  for(int i = 0; i <= n; i++){
     switch(expr[i]){
     case '+':
     case '-':
+    case ')':
       while(op.top() != '('){
-	temp = novo_no(op.top()); op.pop();
+	temp = novo_no();
+	temp->l = op.top(); op.pop();
 	temp->dir = final.top(); final.pop();
 	temp->esq = final.top(); final.pop();
 	final.push(temp);
       }
-      op.push(expr[i]);
+      if(expr[i] == ')')
+	op.pop();
+      else
+	op.push(expr[i]);
       break;
 
     case '*':
     case '/':
       while(op.top() == '*' || op.top() == '/'){
-	temp = novo_no(op.top()); op.pop();
+	temp = novo_no();
+	temp->l = op.top(); op.pop();
 	temp->dir = final.top(); final.pop();
 	temp->esq = final.top(); final.pop();
 	final.push(temp);
@@ -64,32 +71,19 @@ no *avalia()
       break;
 
     case '(':
-      op.push('(');
+      op.push(expr[i]);
       break;
-
-    case ')':
-      while(op.top() != '('){
-	temp = novo_no(op.top()); op.pop();
-	temp->dir = final.top(); final.pop();
-	temp->esq = final.top(); final.pop();
-	final.push(temp);
-      }
-      op.pop();
-      break;
-
     default:
-      final.push(novo_no(expr[i]));
+      temp = novo_no();
+      temp->l = expr[i];
+      temp->esq = temp->dir = NULL;
+      final.push(temp);
     }
-  }
-
-  while(op.top() != '('){
-    temp = novo_no(op.top()); op.pop();
-    temp->dir = final.top(); final.pop();
-    temp->esq = final.top(); final.pop();
-    final.push(temp);
   }
   return final.top();
 }
+
+
 
 inline bool mais_toplevel(no *arv)
 {
@@ -161,19 +155,6 @@ void imprime(no *arv, bool im, bool id)
   }
 }
 
-void imprime2(no *arv)
-{
-  if('a' <= arv->l && arv->l <= 'z'){
-    putchar(arv->l);
-    return;
-  }
-  printf("(");
-  imprime2(arv->esq);
-  printf(")%c(", arv->l);
-  imprime2(arv->dir);
-  printf(")");
-}
-
 int main()
 {
 
@@ -183,9 +164,5 @@ int main()
   no *arv = avalia();
   imprime(arv, false, false);
   printf("\n");
-  /*
-  imprime2(arv);
-  printf("\n");
-  */
   return 0;
 }
