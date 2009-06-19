@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 struct empregado{
   int id, altura, salario;
   bool operator <(const empregado &outro) const{
@@ -19,21 +18,8 @@ struct empregado{
 empregado v[MAX];
 int pai[MAX];
 int subord[MAX];
-vector<int> G[MAX];
 map<int, int> M;
 int n, q;
-
-int vai(int i)
-{
-  int &r = subord[i];
-  if(r != -1)
-    return r;
-
-  r = 0;
-  for(int j = 0; j < G[i].size(); j++)
-    r += vai(G[i][j]) + 1;
-  return r;
-}
 
 int main()
 {
@@ -49,18 +35,20 @@ int main()
       scanf(" %d %d %d", &novo.id, &novo.salario, &novo.altura);
       v[i] = novo;
       pai[i] = -1;
-      subord[i] = -1;
-      G[i].clear();
+      subord[i] = 0;
     }
     sort(v, v+n);
 
     stack<int> pilha;
     for(int i = 0; i < n; i++){
       M[v[i].id] = i;
-      while((!pilha.empty()) && v[pilha.top()].altura <= v[i].altura){
-	G[i].push_back(pilha.top());
-	pai[pilha.top()] = i;
-	pilha.pop();
+      while(!pilha.empty()){
+	int j = pilha.top();
+	if(v[j].altura > v[i].altura)
+	  break;
+	pilha.pop();	
+	subord[i] += subord[j] + 1;
+	pai[j] = i;
       }
       pilha.push(i);
     }
@@ -69,7 +57,7 @@ int main()
       int id;
       scanf(" %d", &id);
       int i = M[id];
-      printf("%d %d\n", (pai[i] == -1 ? 0 : v[pai[i]].id), vai(i));
+      printf("%d %d\n", (pai[i] == -1 ? 0 : v[pai[i]].id), subord[i]);
     }
   }
   return 0;
