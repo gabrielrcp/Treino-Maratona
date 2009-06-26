@@ -1,0 +1,8 @@
+7
+4 24 [jl2]MESSAGE[nl][jl3]MESSAGE[nl][jl4]MESSAGE
+2 24 This[jl3]is a[jl4]message
+2 24 This is a very long message which will not fit
+4 24 This[nl]message[nl]has[nl]too[nl]many[nl]lines
+2 32 [jl3]This message has a [[ and a ]]
+2 32 This is a bad tag[xy34]
+2 32 [jl3]This message [jl5] has a tag conflict.
