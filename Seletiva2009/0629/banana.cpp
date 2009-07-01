@@ -7,7 +7,7 @@ using namespace std;
 #define INF (1<<29)
 
 struct node{
-  int orig, dest;
+  int dest;
   int at, melhor;
 };
 
@@ -27,8 +27,8 @@ void monta(int i)
     if(pai[i] != j && pai[j] == -1){
       pai[j] = i;
       monta(j);
-      minimo[i] = max(minimo[j]+G[i][k].melhor, minimo[i]);
-      atual[i] = max(atual[j]+G[i][k].at, atual[i]);
+      minimo[i] = max(minimo[i], minimo[j] + G[i][k].melhor);
+      atual[i]  = max(atual[i],  atual[j]  + G[i][k].at);
     }
   }
 }
@@ -39,7 +39,7 @@ int gasta(int i, int target)
     return INF;
   if(atual[i] <= target)
     return 0;
-
+  
   int r = 0;
   for(int k = 0; k < G[i].size(); k++){
     int j = G[i][k].dest;
@@ -49,7 +49,7 @@ int gasta(int i, int target)
     if(x <= target)
       continue;
     int t = G[i][k].at - G[i][k].melhor;
-    if(atual[j] <= target)
+    if(atual[j] <= target - G[i][k].melhor)
       r += x - target;
     else
       r += t + gasta(j, target-G[i][k].melhor);
@@ -74,11 +74,9 @@ int main()
     novo.at = a;
     novo.melhor = o;
     
-    novo.orig = i;
     novo.dest = j;
     G[i].push_back(novo);
 
-    novo.orig = j;
     novo.dest = i;
     G[j].push_back(novo);
   }
