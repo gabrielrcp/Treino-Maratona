@@ -10,7 +10,7 @@ vector<int> G[MAX];
 int n;
 int comp[MAX];
 
-bool possivel[MAX][MAX];
+bool possivel[110][110];
 
 
 void dfs(int i, int cp)
@@ -71,21 +71,24 @@ int main()
       }
     }
 
-    for(int i = 0; i < 2*n; i++)
-      for(int j = 0; j < 2*n; j++)
+    for(int i = 0; 2*i <= n; i++)
+      for(int j = 0; 2*j <= n; j++)
 	possivel[i][j] = false;
 
     possivel[0][0] = true;
-
+    
     for(int k = 0; k < qtd.size(); k++){
-      for(int i 
+      for(int i = n/2; i >= qtd[k].first; i--)
+	for(int j = n/2; j >= qtd[k].second; j--){
+	  if(possivel[i-qtd[k].first][j-qtd[k].second])
+	    possivel[i][j] = true;
+	}
     }
 
-
-
-
-
-
+    int resp = 0;
+    for(int i = 1; 2*i <= n; i++)
+      if(possivel[i][i])
+	resp = i;
 
     printf("%d\n", resp);
   }
