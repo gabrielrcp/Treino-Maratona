@@ -1,57 +1,64 @@
 #include <cstdio>
-#include <vector>
-#include <string>
 
-using namespace std;
+struct node{
+  struct node *f[26];
+};
 
-int n, k;
-vector<string> palavras;
-char buf[500];
+node _nos[2000100];
+int conta_nos;
 
-
-vector< vector<int> > separa(vector<int> &at, int p)
+node *novo_no()
 {
-  vector< vector<int> > resp;
-  vector< vector<int> > letras (26);
-  for(int i = 0; i < at.size(); i++)
-    letras[palavras[at[i]][p]-'A'].push_back(at[i]);
+  node *novo = &_nos[conta_nos];
+  conta_nos++;
   for(int i = 0; i < 26; i++)
-    if(letras[i].size() != 0)
-      resp.push_back(letras[i]);
-  return resp;
+    novo->f[i] = NULL;
+  return novo;
 }
 
+void insere(node *arv, char *s, int inc)
+{
+  if(*s == '\0')
+    return;
+  int i = *s - 'A';
+  if(arv->f[i] == NULL)
+    arv->f[i] = novo_no();
+  insere(arv->f[i], s+inc, inc);
+}
 
+int conta(node *arv)
+{
+  if(arv == NULL)
+    return 0;
+  int r = 1;
+  for(int i = 0; i < 26; i++)
+    r += conta(arv->f[i]);
+  return r;
+}
 
-
+char buf[500];
 
 int main()
 {
+  int n, k;
+  node *arv1, *arv2;
   scanf(" %d %d", &n, &k);
+
+  conta_nos = 0;
+  arv1 = novo_no();
+  arv2 = novo_no();
 
   for(int i = 0; i < n; i++){
     scanf(" %s", buf);
-    palavras.push_back(buf);
+    char c = buf[k];
+    buf[k] = '\0';
+    insere(arv1, buf, 1);
+
+    buf[k] = c;
+    buf[k-1] = '\0';
+    insere(arv2, buf+2*k-1, -1);
   }
-  vector<int> ini;
-  for(int i = 0; i < n; i++)
-    ini.push_back(i);
-
-  vector< vector<int> > grupos, temp, temp2
-  grupos = separa(ini, 0);
-  int r = grupos.size();
-  for(int i = 1; i < k; i++){
-    temp2.clear();
-    for(int j = 0; j < grupos.size(); j++){
-      temp = separa(grupos[j], i);
-      for(int l = 0; l < temp.size(); l++)
-	temp2.push_back(temp[l]);
-    }
-    grupos = temp2;
-    r += grupos.size();
-  }
-
-
+  printf("%d\n", conta(arv1) + conta(arv2) - 2);
 
   return 0;
 }
