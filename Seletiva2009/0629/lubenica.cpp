@@ -4,8 +4,8 @@
 
 using namespace std;
 
-#define MAX 100100
-#define LMAX 50
+#define MAX 100010
+#define LMAX 20
 #define INF (1<<30)
 
 typedef pair<int, int> pii;
@@ -55,16 +55,6 @@ void monta()
       maxi[i][j] = max(maxi[i][j-1], maxi[LCA[i][j-1]][j-1]);
     }
   }
-}
-
-//sobe k nuveis na arvore
-int sobe(int i, int k)
-{
-  for(int j = 0; (1 << j) <= k; j++){
-    if(k & (1 << j))
-      i = LCA[i][j];
-  }
-  return i;
 }
 
 pii vai(int p, int q)
@@ -127,15 +117,5 @@ int main()
     pii p = vai(i, j);
     printf("%d %d\n", p.first, p.second);
   }
-
-  /*
-  for(int i = 0; i < n; i++){
-    printf("%d -- ", i+1);
-    for(int j = 0; (1 << j) <= n; j++)
-      printf(" %d", maxi[i][j]);
-    printf("\n");
-  }
-  */
-
   return 0;
 }
