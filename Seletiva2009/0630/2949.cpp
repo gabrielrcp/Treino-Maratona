@@ -18,6 +18,7 @@ struct node{
 node G[MAX][MAX];
 int num[MAX];
 int mat[MAX][MAX];
+int numpos;
 
 inline int numera(char a, char b)
 {
@@ -38,10 +39,12 @@ void nova_aresta()
   int j = numera(buf[n-2], buf[n-1]);
 
   if(i == j){
-    resposta = max(resposta, (double) n);
+    if((double)n > resposta)
+      resposta = (double) n;
     return;
   }
-  mat[i][j] = min(mat[i][j], -n);
+  if(mat[i][j] < n)
+    mat[i][j] = n;
 }
 
 int examinado[MAX];
@@ -49,21 +52,19 @@ double dist[MAX];
 
 bool ciclo_negativo(double adic)
 {
+  
   queue<int> Q;
-  //set<int> S;
   for(int i = 0; i < MAX; i++){
     dist[i] = 0.0;
     examinado[i] = 0;
-    if(num[i] > 0){
+    if(num[i] > 0)
       Q.push(i);
-      //S.insert(i);
-    }
   }
 
   while(!Q.empty()){
     int i = Q.front();
-    Q.pop(); //S.erase(i);
-    if(examinado[i] >= MAX)
+    Q.pop();
+    if(examinado[i] >= numpos)
       return true;
     examinado[i]++;
     for(int k = 0; k < num[i]; k++){
@@ -71,13 +72,11 @@ bool ciclo_negativo(double adic)
       double c = G[i][k].c + adic;
       if(dist[j] > dist[i] + c){
 	dist[j] = dist[i] + c;
-	//if(S.find(j) == S.end()){
 	Q.push(j);
-	  //S.insert(j);
-	  //}
       }
     }
   }
+  
   return false;
 }
 
@@ -112,21 +111,29 @@ int main()
 
     while(n--)
       nova_aresta();
+    numpos = 0;
     for(int i = 0; i < MAX; i++){
       num[i] = 0;
       for(int j = 0; j < MAX; j++)
 	if(mat[i][j] != 0){
 	  G[i][num[i]].v = j;
-	  G[i][num[i]].c = mat[i][j];
-	  maximo = max(-mat[i][j], maximo);
+	  G[i][num[i]].c = -mat[i][j];
+	  if(mat[i][j] > maximo)
+	    maximo = mat[i][j];
 	  num[i]++;
 	}
+      if(num[i] > 0)
+	numpos++;
     }
 
     if(resposta < 1.0 && (!ciclo_negativo(0.0)))
       printf("No solution.\n");
-    else
-      printf("%.2lf\n", max(resposta, vai()));    
+    else{
+      double t = vai();
+      if(t > resposta)
+	resposta = t;
+      printf("%.2lf\n", resposta);
+    }
   }
   return 0;
 }
