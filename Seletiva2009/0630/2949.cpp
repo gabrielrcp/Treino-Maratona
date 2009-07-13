@@ -73,9 +73,10 @@ inline void insere(int x)
 
 inline int retira()
 {
-  return FILA[pe++];
+  int x = FILA[pe++];
   if(pe == MAX2)
     pe = 0;
+  return x;
 }
 
 
@@ -119,7 +120,6 @@ double vai()
     else
       d = m;
   }
-  //e = floor(100.0 * e + 1.0e-9)*0.01;
   return 0.5*(e+d);
 }
 
