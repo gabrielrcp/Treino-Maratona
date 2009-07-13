@@ -9,6 +9,7 @@
 using namespace std;
 
 #define MAX 676
+#define MAX2 5000000
 
 struct node{
   int c;
@@ -50,20 +51,47 @@ void nova_aresta()
 int examinado[MAX];
 double dist[MAX];
 
+int FILA[MAX2];
+int pe, pd;
+
+inline void libera()
+{
+  pe = pd = 0;
+}
+
+inline bool vazia()
+{
+  return (pe == pd);
+}
+
+inline void insere(int x)
+{
+  FILA[pd++] = x;
+  if(pd == MAX2)
+    pd = 0;
+}
+
+inline int retira()
+{
+  return FILA[pe++];
+  if(pe == MAX2)
+    pe = 0;
+}
+
+
 bool ciclo_negativo(double adic)
 {
-  
-  queue<int> Q;
+  libera();
+
   for(int i = 0; i < MAX; i++){
     dist[i] = 0.0;
     examinado[i] = 0;
     if(num[i] > 0)
-      Q.push(i);
+      insere(i);
   }
 
-  while(!Q.empty()){
-    int i = Q.front();
-    Q.pop();
+  while(!vazia()){
+    int i = retira();
     if(examinado[i] >= numpos)
       return true;
     examinado[i]++;
@@ -72,7 +100,7 @@ bool ciclo_negativo(double adic)
       double c = G[i][k].c + adic;
       if(dist[j] > dist[i] + c){
 	dist[j] = dist[i] + c;
-	Q.push(j);
+	insere(j);
       }
     }
   }
