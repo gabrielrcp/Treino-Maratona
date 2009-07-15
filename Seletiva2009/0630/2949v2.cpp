@@ -105,9 +105,12 @@ bool foi[MAX];
 
 double vai()
 {
+  int lim = 0;
   achacomp();
-  for(int cp = 0; cp < ncomp; cp++)
+  for(int cp = 0; cp < ncomp; cp++){
     foi[cp] = false;
+    lim = max(lim, tamcomp[cp]);
+  }
   for(int i = 0; i < MAX; i++)
     dist[i][0] = INF;
 
@@ -118,10 +121,11 @@ double vai()
     dist[i][0] = 0;
   }
 
-  for(int k = 1; k <= MAX; k++){
+  for(int k = 1; k <= lim; k++){
     for(int i = 0; i < MAX; i++)
       dist[i][k] = INF;
     for(int i = 0; i < MAX; i++){
+      if(tamcomp[comp[i]] < k) continue;
       for(int l = 0; l < num[i]; l++){
 	int j = G[i][l].v;
 	if(comp[j] != comp[i]) continue;
