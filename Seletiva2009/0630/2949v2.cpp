@@ -1,10 +1,7 @@
 #include <cstdio>
-#include <vector>
+#include <cmath>
 #include <algorithm>
 #include <cstring>
-#include <queue>
-#include <cmath>
-#include <set>
 
 using namespace std;
 
@@ -51,20 +48,19 @@ void nova_aresta()
 int comp[MAX];
 int ncomp;
 int tamcomp[MAX];
-pair<int, int> term[MAX];
+int term[MAX];
+bool vis[MAX];
 int tempo;
 
 
 void dfs1(int i)
 {
-  if(term[i].first != 0)
+  if(vis[i])
     return;
-  term[i].first = -1;
-  term[i].second = i;
-
+  vis[i] = true;
   for(int k = 0; k < num[i]; k++)
     dfs1(G[i][k].v);
-  term[i].first = tempo++;
+  term[tempo++] = i;
 }
 
 void dfs2(int i, int cp)
@@ -79,21 +75,19 @@ void dfs2(int i, int cp)
 
 void achacomp()
 {
-  tempo = 1;
+  tempo = 0;
   for(int i = 0; i < MAX; i++){
-    term[i].first = 0;
     comp[i] = -1;
+    vis[i] = false;
     tamcomp[i] = 0;
   }
 
   for(int i = 0; i < MAX; i++)
     dfs1(i);
 
-  sort(term, term+MAX);
-
   ncomp = 0;
   for(int i = MAX-1; i >= 0; i--){
-    int j = term[i].second;
+    int j = term[i];
     if(comp[j] == -1)
       dfs2(j, ncomp++);
   }
