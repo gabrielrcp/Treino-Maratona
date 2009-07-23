@@ -20,6 +20,9 @@ char codifica[MAX];
 node *tree;
 int tam;
 
+int marcas[MAX];
+
+
 node *novo()
 {
   node *nv = ll[topo--];
@@ -41,44 +44,15 @@ void inicializa()
   topo = MAX-1;
   tree = novo();
   tam = strlen(codifica);
+  marcas[z-1] = tam-1;
 }
 
-/*
-bool verifica_completa(node *arv)
-{
-  if(arv->numf == 0)
-    return true;
-  if(arv->numf < n)
-    return false;
-  for(int i = 0; i < n; i++)
-    if(!verifica_completa(arv->f[i]))
-      return false;
-  return true;
-}
-*/
-
-int marcas[MAX];
 
 bool vai(int ini, int falta, int abertos)
 {
-  if(abertos == 0){
-    if(falta == 0 && ini == tam){
-      for(int k = 0; k < z; k++){
-	printf("%d->", k);
-	int j = (k == 0 ? 0 : marcas[k-1]+1);
-	while(j <= marcas[k]){
-	  putchar(codifica[j]);
-	  j++;
-	}
-	putchar('\n');
-      }
-      return true;
-    }
+  if(abertos == 0 || falta == 0 || ini == tam)
     return false;
-  }
-  if(falta == 0 || ini == tam)
-    return false;
-  if(abertos > falta)
+  if(falta == 1 && abertos > 1)
     return false;
 
   node *arv = tree;
@@ -99,22 +73,22 @@ bool vai(int ini, int falta, int abertos)
   if(falta == 1){
     if(i + 1 < tam)
       return false;
-    arv->numf++;
-    arv->f[codifica[i]-'0'] = novo();
-    marcas[z-1] = tam - 1;
 
-    if(vai(tam, 0, abertos-1))
-      return true;
-
-    devolve(arv->f[codifica[i]-'0']);
-    arv->f[codifica[i]-'0'] = NULL;
-    arv->numf--;
-    return false;
+    for(int k = 0; k < z; k++){
+      printf("%d->", k);
+      int j = (k == 0 ? 0 : marcas[k-1]+1);
+      while(j <= marcas[k]){
+	putchar(codifica[j]);
+	j++;
+      }
+      putchar('\n');
+    }
+    return true;
   }
 
   int j = i;
   node *atual = arv, *nv;
-  int somaabert = -1;
+  abertos--;
   while(j < tam){
     int k = codifica[j] - '0';
       
@@ -124,12 +98,12 @@ bool vai(int ini, int falta, int abertos)
     marcas[z-falta] = j;
 
 
-    if(abertos + somaabert > falta)
+    if(abertos > falta)
       break;
-    if(vai(j+1, falta-1, abertos+somaabert))
+    if(vai(j+1, falta-1, abertos))
       return true;
 
-    somaabert += n-1;
+    abertos += n-1;
     atual = nv;
     j++;
   }
