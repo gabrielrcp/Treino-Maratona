@@ -18,7 +18,7 @@ int n, z;
 char codifica[MAX];
 
 node *tree;
-int tam, lim;
+int tam;
 
 node *novo()
 {
@@ -41,9 +41,9 @@ void inicializa()
   topo = MAX-1;
   tree = novo();
   tam = strlen(codifica);
-  lim = 12;
 }
 
+/*
 bool verifica_completa(node *arv)
 {
   if(arv->numf == 0)
@@ -55,27 +55,30 @@ bool verifica_completa(node *arv)
       return false;
   return true;
 }
-
+*/
 
 int marcas[MAX];
 
-bool vai(int ini, int falta)
+bool vai(int ini, int falta, int abertos)
 {
-  if(falta == 0 && ini == tam){
-    if(!verifica_completa(tree))
-      return false;
-    for(int k = 0; k < z; k++){
-      printf("%d->", k);
-      int j = (k == 0 ? 0 : marcas[k-1]+1);
-      while(j <= marcas[k]){
-	putchar(codifica[j]);
-	j++;
+  if(abertos == 0){
+    if(falta == 0 && ini == tam){
+      for(int k = 0; k < z; k++){
+	printf("%d->", k);
+	int j = (k == 0 ? 0 : marcas[k-1]+1);
+	while(j <= marcas[k]){
+	  putchar(codifica[j]);
+	  j++;
+	}
+	putchar('\n');
       }
-      putchar('\n');
+      return true;
     }
-    return true;
+    return false;
   }
   if(falta == 0 || ini == tam)
+    return false;
+  if(abertos > falta)
     return false;
 
   node *arv = tree;
@@ -93,9 +96,6 @@ bool vai(int ini, int falta)
     i++;
   }
 
-  if(i - ini > lim)
-    return false;
-
   if(falta == 1){
     if(i + 1 < tam)
       return false;
@@ -103,7 +103,7 @@ bool vai(int ini, int falta)
     arv->f[codifica[i]-'0'] = novo();
     marcas[z-1] = tam - 1;
 
-    if(vai(tam, 0))
+    if(vai(tam, 0, abertos-1))
       return true;
 
     devolve(arv->f[codifica[i]-'0']);
@@ -114,7 +114,8 @@ bool vai(int ini, int falta)
 
   int j = i;
   node *atual = arv, *nv;
-  while(j + falta < tam && j - ini <= lim){
+  int somaabert = -1;
+  while(j < tam){
     int k = codifica[j] - '0';
       
     nv = novo();
@@ -122,11 +123,13 @@ bool vai(int ini, int falta)
     atual->numf++;
     marcas[z-falta] = j;
 
-    if(falta + atual->numf < n)
+
+    if(abertos + somaabert > falta)
       break;
-    if(vai(j+1, falta-1))
+    if(vai(j+1, falta-1, abertos+somaabert))
       return true;
 
+    somaabert += n-1;
     atual = nv;
     j++;
   }
@@ -151,7 +154,7 @@ bool vai(int ini, int falta)
 void resolve()
 {
   inicializa();
-  vai(0, z);
+  vai(0, z, n);
 }
 
 
