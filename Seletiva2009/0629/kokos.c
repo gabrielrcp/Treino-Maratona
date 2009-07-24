@@ -7,6 +7,7 @@ typedef struct _node{
 
 node _nos[2000100];
 int conta_nos;
+int resposta;
 
 node *novo_no()
 {
@@ -15,6 +16,7 @@ node *novo_no()
   conta_nos++;
   for(i = 0; i < 26; i++)
     novo->f[i] = NULL;
+  resposta++;
   return novo;
 }
 
@@ -27,17 +29,6 @@ void insere(node *arv, char *s)
   if(arv->f[i] == NULL)
     arv->f[i] = novo_no();
   insere(arv->f[i], s+1);
-}
-
-int conta(node *arv)
-{
-  int r, i;
-  if(arv == NULL)
-    return 0;
-  r = 1;
-  for(i = 0; i < 26; i++)
-    r += conta(arv->f[i]);
-  return r;
 }
 
 char buf[500];
@@ -53,6 +44,7 @@ int main()
   conta_nos = 0;
   arv1 = novo_no();
   arv2 = novo_no();
+  resposta = 0;
 
   buf[k] = '\0';
   for(i = 0; i < n; i++){
@@ -69,7 +61,7 @@ int main()
     insere(arv2, buf);
 
   }
-  printf("%d\n", conta(arv1) + conta(arv2) - 2);
+  printf("%d\n", resposta);
 
   return 0;
 }
