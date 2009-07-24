@@ -98,7 +98,7 @@ bool vai(int ini, int falta, int abertos)
     marcas[z-falta] = j;
 
 
-    if(abertos > falta)
+    if(abertos > falta - 1)
       break;
     if(vai(j+1, falta-1, abertos))
       return true;
