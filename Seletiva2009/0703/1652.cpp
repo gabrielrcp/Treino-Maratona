@@ -1,3 +1,5 @@
+// Apesar de tomar AC, essa solução está errada! (veja 1652.in2)
+
 #include <cstdio>
 #include <vector>
 #include <set>
@@ -107,6 +109,7 @@ int main()
   }
 
   printf("%d\n", arearesp);
+  
   return 0;
 
 }

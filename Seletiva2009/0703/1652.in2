@@ -1,0 +1,24 @@
+13 13
+*************
+*...........*
+*.****.****.*
+*.*********.*
+*.****.****.*
+*.*********.*
+*.*********.*
+*.*********.*
+*.*********.*
+*.*********.*
+*.*********.*
+*...........*
+*************
+
+Resposta certa: 48
+
+
+As duas peças tem 1 buraco apenas, sendo que a de dentro tem área 79
+enquanto que a de fora tem área 48, assim a resposta devia ser 48
+(já que há empate, a de menor área ganha).
+
+Mas o meu programa acha que a peça de dentro tem 2 buracos,
+então responde 79
