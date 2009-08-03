@@ -6,8 +6,10 @@ using namespace std;
 
 #define MAX 5010
 
-vector<int> G[MAX];
-vector<int> Ginv[MAX];
+int G[MAX][MAX];
+int num[MAX];
+int Ginv[MAX][MAX];
+int numinv[MAX];
 int n;
 
 int numcomp;
@@ -21,7 +23,7 @@ void dfs1(int i)
 {
   if(vis[i]) return;
   vis[i] = true;
-  for(int k = 0; k < G[i].size(); k++)
+  for(int k = 0; k < num[i]; k++)
     dfs1(G[i][k]);
   final[tempo++] = i;
 }
@@ -32,7 +34,7 @@ void dfs2(int i, int cp)
     return;
   comp[i] = cp;
 
-  for(int k = 0; k < Ginv[i].size(); k++)
+  for(int k = 0; k < numinv[i]; k++)
     dfs2(Ginv[i][k], cp);
 }
 
@@ -63,7 +65,7 @@ void imprime_folhas()
 
   for(int i = 0; i < n; i++){
     if(!ehfolha[comp[i]]) continue;
-    for(int k = 0; k < G[i].size(); k++){
+    for(int k = 0; k < num[i]; k++){
       int j = G[i][k];
       if(comp[i] != comp[j]){
 	ehfolha[comp[i]] = false;
@@ -90,18 +92,16 @@ int main()
   while(1){
     scanf(" %d", &n);
     if(n == 0) break;
-    for(int i = 0; i < n; i++){
-      G[i].clear();
-      Ginv[i].clear();
-    }
+    for(int i = 0; i < n; i++)
+      num[i] = numinv[i] = 0;
     int m;
     scanf(" %d", &m);
     while(m--){
       int i, j;
       scanf(" %d %d", &i, &j);
       i--; j--;
-      G[i].push_back(j);
-      Ginv[j].push_back(i);
+      G[i][num[i]++] = j;
+      Ginv[j][numinv[j]++] = i;
     }
 
     encontra_componentes();
@@ -109,3 +109,6 @@ int main()
   }
   return 0;
 }
+
+
+
