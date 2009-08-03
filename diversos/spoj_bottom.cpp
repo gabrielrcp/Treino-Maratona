@@ -14,9 +14,7 @@ int numcomp;
 int comp[MAX];
 
 int tempo;
-pair<int, int> final[MAX];
-
-
+int final[MAX];
 bool vis[MAX];
 
 void dfs1(int i)
@@ -25,7 +23,7 @@ void dfs1(int i)
   vis[i] = true;
   for(int k = 0; k < G[i].size(); k++)
     dfs1(G[i][k]);
-  final[i] = make_pair(tempo--, i);
+  final[tempo++] = i;
 }
 
 void dfs2(int i, int cp)
@@ -44,15 +42,13 @@ void encontra_componentes()
     vis[i] = false;
     comp[i] = -1;
   }
-  tempo = 2*n;
+  tempo = 0;
   for(int i = 0; i < n; i++)
     dfs1(i);
 
-  sort(final, final+n);
-
   numcomp = 0;
-  for(int i = 0; i < n; i++){
-    int j = final[i].second;
+  for(int i = n-1; i >= 0; i--){
+    int j = final[i];
     if(comp[j] == -1)
       dfs2(j, numcomp++);
   }
@@ -66,10 +62,13 @@ void imprime_folhas()
     ehfolha[i] = true;
 
   for(int i = 0; i < n; i++){
+    if(!ehfolha[comp[i]]) continue;
     for(int k = 0; k < G[i].size(); k++){
       int j = G[i][k];
-      if(comp[i] != comp[j])
+      if(comp[i] != comp[j]){
 	ehfolha[comp[i]] = false;
+	break;
+      }
     }
   }
 
