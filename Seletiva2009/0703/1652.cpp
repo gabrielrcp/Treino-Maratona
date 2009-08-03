@@ -1,4 +1,3 @@
-// Apesar de tomar AC, essa solução está errada! (veja 1652.in2)
 
 #include <cstdio>
 #include <vector>
@@ -8,108 +7,91 @@ using namespace std;
 
 #define MAX 110
 
-vector<int> area;
 char matriz[MAX][MAX];
 int numera[MAX][MAX];
 int n, m;
-vector<bool> ehburaco;
-vector< set<int> > buracos;
-
 
 int dx[4] = {-1, 1, 0, 0};
 int dy[4] = {0, 0, -1, 1};
 
-void dfs(int i, int j, int cp)
+bool vis[MAX][MAX];
+
+int floodfill(int i, int j, int cp)
 {
-  if(i < 0 || i >= n || j < 0 || j >= m)
-    return;
   if(numera[i][j] != -1 || matriz[i][j] == '.')
-    return;
+    return 0;
 
   numera[i][j] = cp;
-  area[cp]++;
+  int r = 1;
   for(int k = 0; k < 4; k++)
-    dfs(i+dx[k], j+dy[k], cp);
+    r += floodfill(i+dx[k], j+dy[k], cp);
+  return r;
 }
 
-void buraco(int i, int j, int nb)
-{
-  if(i < 0 || i >= n || j < 0 || j >= m){
-    ehburaco[nb] = false;
-    return;
-  }
-  if(numera[i][j] != -1 || matriz[i][j] == '*')
-    return;
 
-  numera[i][j] = nb;
+void vai(int i, int j, int cp)
+{
+  if(i < 0 || i > n+1 || j < 0 || j > m+1)
+    return;
+  if(vis[i][j] || numera[i][j] == cp)
+    return;
+  
+  vis[i][j] = true;
   for(int k = 0; k < 4; k++)
-    buraco(i+dx[k], j+dy[k], nb);  
+    vai(i+dx[k], j+dy[k], cp);
 }
 
-
-
-void percorre(int i)
+int contaburacos(int cp)
 {
-  int ultcp = ((matriz[i][0] == '*') ? numera[i][0] : -1);
-  for(int j = 1; j < m; j++){
-    if(matriz[i][j] == '*'){
-      if(matriz[i][j-1] == '.' &&
-	 ultcp == numera[i][j] &&
-	 ehburaco[numera[i][j-1]])
-	buracos[ultcp].insert(numera[i][j-1]);
-      ultcp = numera[i][j];
-    }
-  }
+  for(int i = 0; i <= n+1; i++)
+    for(int j = 0; j <= m+1; j++)
+      vis[i][j] = false;
+
+  vai(0, 0, cp);
+  int r = 0;
+  for(int i = 1; i <= n; i++)
+    for(int j = 1; j <= m; j++)
+      if(numera[i][j] != cp && (!vis[i][j])){
+	vai(i, j, cp);
+	r++;
+      }
+  return r;
 }
+
 
 int main()
 {
   scanf(" %d %d", &m, &n);
-  for(int i = 0; i < n; i++)
-    for(int j = 0; j < m; j++){
+  for(int i = 0; i <= n; i++){
+    matriz[i][0] = matriz[i][m+1] = '.';
+    numera[i][0] = numera[i][m+1] = -1;
+  }
+  for(int j = 0; j <= m; j++){
+    matriz[0][j] = matriz[n+1][j] = '.';
+    numera[0][j] = numera[n+1][j] = -1;
+  }
+
+  for(int i = 1; i <= n; i++)
+    for(int j = 1; j <= m; j++){
       scanf(" %c", &matriz[i][j]);
       numera[i][j] = -1;
     }
 
   int cp = 0;
-  for(int i = 0; i < n; i++)
-    for(int j = 0; j < m; j++)
+  int mbur = 0, marea = 0;
+  for(int i = 1; i <= n; i++)
+    for(int j = 1; j <= m; j++)
       if(matriz[i][j] == '*' && numera[i][j] == -1){
-	area.push_back(0);
-	buracos.push_back( set<int> () );
-	dfs(i, j, cp++);
+	int area = floodfill(i, j, cp);
+	int bur = contaburacos(cp);
+
+	if(bur > mbur || (bur == mbur && area < marea)){
+	  marea = area;
+	  mbur = bur;
+	}
+	cp++;
       }
 
-  int nb = 0;
-  for(int i = 0; i < n; i++)
-    for(int j = 0; j < m; j++)
-      if(matriz[i][j] == '.' && numera[i][j] == -1){
-	ehburaco.push_back(true);
-	buraco(i, j, nb++);
-      }
-
-
-  for(int i = 0; i < n; i++)
-    percorre(i);
-
-
-  int resp = 0;
-  int arearesp = 0;
-  
-  for(int i = 0; i < area.size(); i++){
-    int t = buracos[i].size();
-    if(t > resp){
-      resp = t;
-      arearesp = area[i];
-    }
-    else if(t == resp){
-      if(arearesp > area[i])
-	arearesp = area[i];
-    }
-  }
-
-  printf("%d\n", arearesp);
-  
+  printf("%d\n", marea); 
   return 0;
-
 }
