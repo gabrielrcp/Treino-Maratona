@@ -10,6 +10,7 @@ vector<int> area;
 char matriz[MAX][MAX];
 int numera[MAX][MAX];
 int n, m;
+vector<bool> ehburaco;
 vector< set<int> > buracos;
 
 
@@ -31,8 +32,10 @@ void dfs(int i, int j, int cp)
 
 void buraco(int i, int j, int nb)
 {
-  if(i < 0 || i >= n || j < 0 || j >= m)
+  if(i < 0 || i >= n || j < 0 || j >= m){
+    ehburaco[nb] = false;
     return;
+  }
   if(numera[i][j] != -1 || matriz[i][j] == '*')
     return;
 
@@ -48,7 +51,9 @@ void percorre(int i)
   int ultcp = ((matriz[i][0] == '*') ? numera[i][0] : -1);
   for(int j = 1; j < m; j++){
     if(matriz[i][j] == '*'){
-      if(matriz[i][j-1] == '.' && ultcp == numera[i][j])
+      if(matriz[i][j-1] == '.' &&
+	 ultcp == numera[i][j] &&
+	 ehburaco[numera[i][j-1]])
 	buracos[ultcp].insert(numera[i][j-1]);
       ultcp = numera[i][j];
     }
@@ -77,6 +82,7 @@ int main()
   for(int i = 0; i < n; i++)
     for(int j = 0; j < m; j++)
       if(matriz[i][j] == '.' && numera[i][j] == -1){
+	ehburaco.push_back(true);
 	buraco(i, j, nb++);
       }
 
