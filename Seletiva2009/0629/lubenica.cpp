@@ -76,7 +76,7 @@ pii vai(int p, int q)
     return make_pair(rmi, rma);
 
   k = 0;
-  while( (1 << k) < dist[p])
+  while(LCA[p][k] != LCA[q][k])
     k++;
   k--;
 
