@@ -1,3 +1,5 @@
+// TLE, olhar a solucao com sort do Joel
+
 #include <cstdio>
 #include <map>
 #include <algorithm>
@@ -6,62 +8,50 @@
 
 using namespace std;
 
-int gdc(int a, int b)
-{
-  if(a == 0 || b == 0) return 1;
-  if(a < b) return gdc(b, a);
-  if(a % b == 0) return b;
-  return gdc(b, a%b);
-}
-
-typedef pair<int, int> frac;
+struct frac{
+  int num, den;
+  bool operator<(const frac &outro) const{
+    return (num*outro.den < outro.num*den);
+  }
+};
 int n;
 
-frac pontos[MAX];
+pair<int, int> pontos[MAX];
 map<frac, int> M;
 
-int atual;
+int resp;
 
 void adiciona(int i, int j)
 {
+  frac f;
   if(pontos[i].second == pontos[j].second)
     return;
-  frac f;
 
-  f.first = pontos[j].first - pontos[i].first;
-  f.second = pontos[j].second - pontos[i].second;
-  int t = gdc(abs(f.first), abs(f.second));
-  f.first /= t;
-  f.second /= t;
-
-  if(f.second < 0){
-    f.first = -f.first;
-    f.second = -f.second;
-  }
+  f.num = pontos[i].first - pontos[j].first;
+  f.den = pontos[i].second - pontos[j].second;
 
   map<frac, int>::iterator it = M.find(f);
-  if(it == M.end())
+  if(it == M.end()){
     M[f] = 1;
-  else{
-    if(it->second+1 > atual)
-      atual = it->second+1;
-    M[f]++;
   }
-    
+  else{
+    resp = max(resp, it->second+1);
+    it->second++;
+  }
 }
 
-int vai(int p)
+
+void vai(int p)
 {
-  atual = 0;
+  int linha = 0;
   for(int i = 0; i < n; i++)
     if(i != p && pontos[i].second == pontos[p].second)
-      atual++;
+      linha++;
+  resp = max(resp, linha);
 
   M.clear();
   for(int i = 0; i < n; i++)
     adiciona(p, i);
-
-  return atual;
 }
 
 int main()
@@ -72,9 +62,9 @@ int main()
     for(int i = 0; i < n; i++)
       scanf(" %d %d", &pontos[i].first, &pontos[i].second);
 
-    int resp = 0;
+    resp = 0;
     for(int i = 0; i < n; i++)
-      resp = max(resp, vai(i));
+      vai(i);
     resp++;
 
     if(resp < 4) resp = 0;
