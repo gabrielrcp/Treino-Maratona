@@ -139,8 +139,6 @@ void bt(string s)
 	if(a >= 100 || b >= 100)
 	  continue;
 
-	if(a == 0 || b == 0 || c == 0)
-	  continue;
 	resolve();
       }
 }
