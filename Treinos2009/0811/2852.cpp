@@ -29,24 +29,16 @@ inline ponto somamult(ponto x, ponto v, double m)
   return ret;
 }
 
+inline double prodint(ponto u, ponto v)
+{
+  return u.x*v.x + u.y*v.y + u.z*v.z;
+}
+
 ponto vai(double mult)
 {
   ponto at = somamult(a, va, mult);
-
-  double e = 0.0, d = 1.0e20;
-  for(int conta = 0; conta < 200; conta++){
-    double m1 = (2.0*e+d)/3.0;
-    double m2 = (e+2.0*d)/3.0;
-
-    double t1 = distancia(at, somamult(b, vb, m1));
-    double t2 = distancia(at, somamult(b, vb, m2));
-
-    if(t2 > t1)
-      d = m2;
-    else
-      e = m1;
-  }
-  return somamult(b, vb, e);
+  double m = abs(prodint(vb, somamult(at, b, -1.0)));
+  return somamult(b, vb, m);
 }
 
 
