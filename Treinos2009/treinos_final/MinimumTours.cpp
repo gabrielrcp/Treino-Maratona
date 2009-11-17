@@ -261,7 +261,7 @@ pii dfsmar(int, int);
 pii dfsilha(int i, int pai)
 {
   int resp = 0;
-  int q0 = 0, q1 = 0, q2 = 0;
+  int q0 = 0, q1 = 0;
   for(int k = 0; k < (int)G[i].size(); k++){
     int j = G[i][k];
     if(j == pai) continue;
@@ -270,16 +270,15 @@ pii dfsilha(int i, int pai)
     switch(p.first){
     case 0: q0++; break;
     case 1: q1++; break;
-    case 2: q2++; break;
     }
   }
-  if(q0 == 0 && q1 == 0 && q2 == 0)
+  if(q0 == 0 && q1 == 0)
     return make_pair(0, resp + 1);
-  if(q0 + q1 > 1)
-    return make_pair(2, resp - 1);
-  if(q0 + q1 > 0)
+  if(q0 > 1)
+    return make_pair(-1, resp - 1);
+  if(q0 > 0)
     return make_pair(1, resp);
-  return make_pair(2, resp);
+  return make_pair(-1, resp);
 }
 
 pii dfsmar(int i, int pai)
@@ -300,24 +299,9 @@ pii dfsmar(int i, int pai)
 
   if(q0 == 0 && q1 == 0)
     return make_pair(-1, resp);
-
-  if(q0 == 0){
-    if(q1 == 1)
-      return make_pair(1, resp);
-
-    int t = q1/2;
-    resp -= t;
-    q1 -= 2*t;
-    if(q1 == 1)
-      return make_pair(1, resp);
-    return make_pair(2, resp);
-  }
-
   if(q1 == 0){
-    if(q0 == 1)
-      return make_pair(0, resp);
     resp -= q0 - 1;
-    return make_pair(1, resp);
+    return make_pair(0, resp);
   }
 
   int t = q1/2;
@@ -327,8 +311,8 @@ pii dfsmar(int i, int pai)
   q1 -= 2*t;
 
   if(q1 == 1)
-    return make_pair(1, resp);
-  return make_pair(2, resp);
+    return make_pair(0, resp);
+  return make_pair(1, resp);
 }
 
 
