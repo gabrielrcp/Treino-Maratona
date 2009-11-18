@@ -206,12 +206,7 @@ int n, m;
 int ncp;
 
 vector< vector<int> > comp;
-vector<bool> ehilha;
-
-vector< vector<bool> > foi;
-vector< vector<bool> > liga;
 vector< vector<int> > G;
-
 
 
 int dx[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
@@ -228,27 +223,6 @@ void fill(int i, int j, int cp)
     if(y < 0 || y >= m) continue;
     if(mapa[x][y] == mapa[i][j])
       fill(x, y, cp);
-  }
-}
-
-void monta(int i, int j)
-{
-  if(foi[i][j]) return;
-  foi[i][j] = true;
-
-  for(int k = 0; k < 8; k++){
-    int x = i+dx[k];
-    int y = j+dy[k];
-    if(x < 0 || x >= n) continue;
-    if(y < 0 || y >= m) continue;
-
-
-    if(mapa[x][y] == mapa[i][j])
-      monta(x, y);
-    else{
-      liga[comp[i][j]][comp[x][y]] = true;
-      liga[comp[x][y]][comp[i][j]] = true;
-    }
   }
 }
 
@@ -296,7 +270,6 @@ pii dfsmar(int i, int pai)
     }
   }
 
-
   if(q0 == 0 && q1 == 0)
     return make_pair(-1, resp);
   if(q1 == 0){
@@ -324,33 +297,35 @@ int MinimumTours::getMinimumTours(vector <string> islandMap)
   ncp = 0;
 
   comp = vector< vector<int> > (n, vector<int> (m, -1));
-  ehilha.clear();
+  int ini = -1;
   
   for(int i = 0; i < n; i++)
     for(int j = 0; j < m; j++){
       if(comp[i][j] == -1){
-	ehilha.push_back(mapa[i][j] == 'x');
+	if(mapa[i][j] == 'x')
+	  ini = ncp;
 	fill(i, j, ncp++);
       }
     }
   
-
-  foi = vector< vector<bool> > (n, vector<bool> (m, false));
-  liga = vector< vector<bool> > (ncp, vector<bool> (ncp, false));
+  vector< vector<bool> > liga (ncp, vector<bool> (ncp, false));
 
   for(int i = 0; i < n; i++)
     for(int j = 0; j < m; j++)
-      monta(i, j);
-
-  G = vector< vector<int> > (ehilha.size(), vector<int> ());
+      for(int k = 0; k < 8; k++){
+	int x = i+dx[k];
+	int y = j+dy[k];
+	if(x >= 0 && x < n && y >= 0 && y < m && mapa[x][y] != mapa[i][j]){
+	  liga[comp[i][j]][comp[x][y]] = true;
+	  liga[comp[x][y]][comp[i][j]] = true;
+	}
+      }
+  
+  G = vector< vector<int> > (ncp, vector<int> ());
   for(int i = 0; i < ncp; i++)
     for(int j = 0; j < ncp; j++)
       if(liga[i][j])
 	G[i].push_back(j);
 
-  int i = 0;
-  while(!ehilha[i]) i++;
-
-  return dfsilha(i, -1).second;
-
+  return dfsilha(ini, -1).second;
 }
