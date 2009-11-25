@@ -42,7 +42,167 @@ int main()
 } 
 // END CUT HERE 
 
+
+int mapa[3][4];
+int n, m;
+int lx, ly;
+
+typedef long long ll;
+
+int a[4];
+
+ll codifica()
+{
+  memset(a, 0, sizeof a);  
+  for(int i = 0; i < n; i++)
+    for(int j = 0; j < m; j++)
+      if(mapa[i][j] != -1)
+	a[mapa[i][j]] |= (1 << (i + j*n));
+  
+  sort(a, a+m);
+ 
+  ll r = 0;
+  for(int i = 0; i < m; i++)
+    r |= (((ll)a[i]) << (n*m*i));
+  return r;
+  
+}
+
+void decodifica(ll e)
+{
+  memset(a, 0, sizeof a);  
+  ll msk = ((1ll << (n*m)) - 1);
+  for(int i = 0; i < m; i++){
+    a[i] = (int) (msk & e);
+    e >>= (n*m);
+  }
+  
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < m; j++){
+      mapa[i][j] = -1;
+      int k;
+      for(k = 0; k < m; k++){
+	if(a[k] & (1 << (i + j*n))){
+	  mapa[i][j] = k;
+	  break;
+	}
+      }
+      if(k == m){
+	lx = i; ly = j;
+      }
+    }
+  }
+}
+
+void gira(int i, int d)
+{
+  for(int j = 0; j < m; j++){
+    int l = j+d;
+    if(l < 0) l += m;
+    if(l >= m) l -= m;
+    a[l] = mapa[i][j];
+  }
+  for(int j = 0; j < m; j++)
+    mapa[i][j] = a[j];
+}
+
+bool troca(int d)
+{
+  if(lx + d < 0 || lx + d >= n)
+    return false;
+  swap(mapa[lx][ly], mapa[lx+d][ly]);
+  lx += d;
+  return true;
+}
+
+bool resolvido(ll e)
+{
+  ll msk = ((1ll << (n*m)) - 1);
+  for(int i = 0; i < m; i++){
+    a[i] = (int) (msk & e);
+    e >>= (n*m);
+  }
+  for(int i = 0; i < m; i++){
+    if(a[i] >= (1 << (n*(i+1))))
+      return false;
+    int x = ((a[i] & (a[i]-1)) ^ a[i]);
+    if(x < (1 << (n*i)))
+      return false;
+  }
+
+  return true;
+}
+/*
+void imprime()
+{
+  for(int i = 0; i < n; i++){
+    for(int j = 0; j < m; j++)
+      putchar(mapa[i][j]+'B');
+    putchar('\n');
+  }
+}
+*/
+int resolve()
+{
+  queue<ll> Q;
+  map<ll, int> M;
+
+  //imprime(); puts("");
+
+  for(int i = 0; i < n; i++)
+    for(int j = 0; j < m; j++){
+      int x = mapa[i][j];
+      mapa[i][j] = -1;
+      ll e = codifica();
+      if(resolvido(e)) { return 0;}
+      Q.push(e);
+      M[e] = 0;
+      mapa[i][j] = x;
+    }
+
+  while(!Q.empty()){
+    ll e = Q.front(); Q.pop();
+    decodifica(e);
+    int dist = M[e];
+
+    for(int i = 0; i < n; i++){
+      for(int d = -1; d <= 1; d += 2){
+	gira(i, d);
+	ll nv = codifica();
+	if(resolvido(nv)) { return dist+1;}
+	if(M.find(nv) == M.end()){
+	  Q.push(nv);
+	  M[nv] = dist + 1;
+	}
+	gira(i, -d);
+      }
+    }
+
+    for(int d = -1; d <= 1; d += 2){
+      if(troca(d)){
+	ll nv = codifica();
+	if(resolvido(nv)){ return dist+1;}
+	if(M.find(nv) == M.end()){
+	  Q.push(nv);
+	  M[nv] = dist + 1;
+	}
+	troca(-d);
+      }
+    }
+
+
+  }
+
+  return -1; //hein?!
+}
+
 int PenPuzzle::solve(vector <string> puzzle)
 {
- 
+  n = puzzle.size();
+  m = puzzle[0].size();
+  for(int i = 0; i < n; i++)
+    for(int j = 0; j < m; j++)
+      mapa[i][j] = puzzle[i][j] - 'A';
+
+  return resolve();
 }
