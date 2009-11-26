@@ -96,14 +96,15 @@ void decodifica(ll e)
 
 void gira(int i, int d)
 {
-  for(int j = 0; j < m; j++){
-    int l = j+d;
-    if(l < 0) l += m;
-    if(l >= m) l -= m;
-    a[l] = mapa[i][j];
+  if(d == 1){
+    for(int j = 1; j < m; j++)
+      swap(mapa[i][j-1], mapa[i][j]);
+  } else{
+    for(int j = m-1; j > 0; j--)
+      swap(mapa[i][j-1], mapa[i][j]);
   }
-  for(int j = 0; j < m; j++)
-    mapa[i][j] = a[j];
+
+  ly += d;
 }
 
 bool troca(int d)
@@ -132,22 +133,11 @@ bool resolvido(ll e)
 
   return true;
 }
-/*
-void imprime()
-{
-  for(int i = 0; i < n; i++){
-    for(int j = 0; j < m; j++)
-      putchar(mapa[i][j]+'B');
-    putchar('\n');
-  }
-}
-*/
+
 int resolve()
 {
   queue<ll> Q;
   map<ll, int> M;
-
-  //imprime(); puts("");
 
   for(int i = 0; i < n; i++)
     for(int j = 0; j < m; j++){
@@ -189,8 +179,6 @@ int resolve()
 	troca(-d);
       }
     }
-
-
   }
 
   return -1; //hein?!
