@@ -273,14 +273,14 @@ vector<int> conta;
 
 ll memo[LIM][51];
 
-ll contar(ll a, ll b, ll H)
+bool predicado(ll a, ll b, ll H, ll k)
 {
   ll r = 0;
   for(int i = 0; a*i <= H; i++){
     r += (H - i*a) / b + 1;
-    if(r > 1000000000000ll) return r; //10^12
+    if(r >= k) return true; //10^12
   }
-  return r;
+  return false;
 }
 
 int resolve2(int a, int b, ll k)
@@ -289,7 +289,7 @@ int resolve2(int a, int b, ll k)
   int r = dir;
   while(esq <= dir){
     int m = (esq+dir)/2;
-    if(contar(a, b, m) >= k){
+    if(predicado(a, b, m, k)){
       r = m;
       dir = m - 1;
     } else

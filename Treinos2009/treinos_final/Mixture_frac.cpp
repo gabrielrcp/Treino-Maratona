@@ -95,8 +95,9 @@ int main()
 // END CUT HERE 
 
 typedef long long ll;
+typedef unsigned long long ull;
 
-ll gdc(ll a, ll b)
+ll gdc(ull a, ull b)
 {
   if(a < b) swap(a, b);
   if(b == 0) return a;
@@ -104,48 +105,58 @@ ll gdc(ll a, ll b)
 }
 
 struct frac{
-  ll num, den;
+  char s;
+  ull num, den;
 };
 
 void simpli(frac &f){
   if(f.num != 0){
-    ll d = gdc(abs(f.num), abs(f.den));
+    ll d = gdc(f.num, f.den);
     f.num /= d;
     f.den /= d;
   }
   else
     f.den = 1;
-
-  if(abs(f.num) > (1LL << 62)) cerr << "ain"<<  endl;
-  if(abs(f.den) > (1LL << 62)) cerr << "aid"<<  endl;
-
-}
-
-frac monta(ll num, ll den)
-{
-  if(den < 0){
-    num *= -1;
-    den *= -1;
-  }
-  frac f = (frac){num, den};
-  simpli(f);
-  return f;
 }
  
 frac soma (frac f1, frac f2){
-  return monta(f1.num*f2.den + f2.num*f1.den, f1.den * f2.den);
+  ull n, d;
+  char s;
+  d = f1.den * f2.den;
+  if(f1.s == f2.s){
+    n = f1.num*f2.den + f2.num*f1.den;
+    s = f1.s;
+  }
+  else if(f1.num*f2.den >= f2.num*f1.den){
+    n = f1.num*f2.den - f2.num*f1.den;
+    s = f1.s;
+  }else{
+    n = f2.num*f1.den - f1.num*f2.den;
+    s = f2.s;
+  }
+
+  frac f = (frac){s, n, d};
+  simpli(f);
+  return f;
 }
 
 frac subtrai (frac f1, frac f2){
-  return monta(f1.num*f2.den - f2.num*f1.den, f1.den * f2.den);
+  f2.s = -f2.s;
+  return soma(f1, f2);
 }
 
-frac multiplica(frac f1, frac f2){
-  return monta(f1.num*f2.num, f1.den*f2.den);
+frac multiplica(frac f1, frac f2)
+{
+  frac f = (frac){f1.s*f2.s, f1.num*f2.num, f1.den*f2.den};
+  simpli(f);
+  return f;
 }
 
-frac divide(frac f1, frac f2){
-  return monta(f1.num*f2.den, f1.den*f2.num);
+frac divide(frac f1, frac f2)
+{
+  frac f = (frac){f1.s*f2.s, f1.num*f2.den, f1.den*f2.num};
+  simpli(f);
+  return f;
 }
 
 bool zero(frac &f)
@@ -203,12 +214,12 @@ double resolve(vector< vector<frac> > A, vector<frac> b, vector<int> P)
 
     sol[j] = divide(sol[j], A[i][j]);
     sei[j] = true;
-    if(sol[j].num < 0) return INF;
+    if(sol[j].s < 0) return INF;
   }
 
-  frac resp = monta(0, 1);
+  frac resp = (frac){1, 0, 1};
   for(int i = 0; i < m; i++)
-    resp = soma(resp, multiplica(sol[i], monta(P[i], 1)));
+    resp = soma(resp, multiplica(sol[i], (frac){1, P[i], 1}));
   return (double)resp.num / resp.den;
 }
 
@@ -224,14 +235,14 @@ double Mixture::mix(vector <int> mixture, vector <string> availableMixtures)
   vector< vector<frac> > A (n, vector<frac> (m));
 
   for(int i = 0; i < n; i++)
-    b.push_back(monta(mixture[i], 1));
+    b.push_back((frac){1, mixture[i], 1});
 
   for(int j = 0; j < m; j++){
     istringstream iss(availableMixtures[j]);
     for(int i = 0; i < n; i++){
       int x;
       iss >> x;
-      A[i][j] = monta(x, 1);
+      A[i][j] = (frac){1, x, 1};
     }
     iss >> P[j];
   }
