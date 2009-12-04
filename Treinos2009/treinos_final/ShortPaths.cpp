@@ -278,7 +278,7 @@ bool predicado(ll a, ll b, ll H, ll k)
   ll r = 0;
   for(int i = 0; a*i <= H; i++){
     r += (H - i*a) / b + 1;
-    if(r >= k) return true; //10^12
+    if(r >= k) return true;
   }
   return false;
 }
