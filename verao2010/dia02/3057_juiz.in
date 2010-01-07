@@ -1,0 +1,217 @@
+22
+5 5
+XXDXX
+X...X
+D...X
+X...D
+XXXXX
+5 12
+XXXXXXXXXXXX
+X..........D
+X.XXXXXXXXXX
+X..........X
+XXXXXXXXXXXX
+5 5
+XDXXX
+X.X.D
+XX.XX
+D.X.X
+XXXDX
+3 3
+DDD
+D.D
+DDD
+3 3
+XXX
+X.X
+XXX
+3 12
+XXXXXXXXXXXX
+D..........X
+XXXXXXXXXXXX
+12 3
+XXX
+X.X
+X.D
+X.X
+X.X
+X.X
+D.X
+X.X
+D.X
+X.X
+X.X
+XXX
+12 12
+XXXXXXXXXXXX
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+XXXXXXXXXXXX
+12 12
+XXXXXXXXXXDX
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+XXXXXXXXXXXX
+12 12
+DDDDDDDDDDDD
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+DDDDDDDDDDDD
+12 12
+DDDDDDDDDDDD
+DXXXX.XXXXXD
+DX........XD
+DX........XD
+DX........XD
+DX........XD
+DX........XD
+DX........XD
+DX........XD
+DX........XD
+DXXXXXXXXXXD
+DDDDDDDDDDDD
+12 12
+XXXXXXXXXXDX
+X.X........X
+X.X.XXXXXX.X
+X.X........D
+X.XXXXX.X..X
+X.X.....X..X
+X.X..XXXX..X
+X....X.....X
+X.X..X..XXXX
+X.X..XXXX..D
+X.X........X
+XXDXXXXXXXXX
+12 12
+DDDDDDDDDDDD
+D..........D
+D..........D
+D..........D
+D.....X....D
+D....X.X...D
+D.....X....D
+D..........D
+D..........D
+D..........D
+D..........D
+DDDDDDDDDDDD
+12 12
+DDDDDDDDDDDD
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+D..........D
+DX.........D
+X.X........D
+DXDDDDDDDDDD
+12 12
+XXXXXXXXDXXX
+X..........X
+X.XXXXXXXXXX
+X..........X
+XXXXXXXXXX.X
+X........X.X
+X.XXX..X.X.X
+X.X.XXXX.X.X
+X.X......X.X
+X.XXXXXXXX.X
+X..........X
+XXXXXXXXXXXX
+12 12
+XXXXXDXXXXXX
+X.....X....X
+X..X..X....X
+X.....XXX..X
+X.....X....X
+XXXXXX.....D
+X.....XXXXXX
+D....X.....X
+D....X.....D
+D....XXXXXXX
+X....X.....X
+XXXXXXXDXXXX
+12 12
+DXXXXXXXXXXD
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+X..........X
+DXXXXXXXXXXD
+12 12
+XXXXXXXXXXXX
+X.X........D
+D.XXXXXXXXXX
+X.X........D
+X.XXXXXXXXXX
+X.X........D
+X.X.XXXXXXXX
+X.X.X.X.X..X
+X.X.X.X.X..D
+XXXXX.X.XXXX
+X..........D
+XXXXXXXXXXXX
+3 10
+XXXXDXXXDX
+X........X
+XXXXXXXXXX
+10 3
+XXX
+D.X
+X.X
+X.X
+X.X
+D.X
+X.X
+X.X
+X.X
+XXX
+3 10
+XXXXXXXXXX
+X........X
+XDXXXDXXXX
+10 3
+XXX
+X.X
+X.X
+X.X
+X.D
+X.X
+X.X
+X.X
+X.D
+XXX
