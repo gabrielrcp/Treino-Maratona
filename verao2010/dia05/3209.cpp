@@ -1,17 +1,19 @@
 #include <cstdio>
 #include <cstring>
+#include <bitset>
+
+using namespace std;
 
 typedef long long ll;
 
-#define MAX ((1<<23)+1)
+#define MAX (1<<25)
 
-char nep[MAX];
+bitset<MAX> nep (0);
 int npr;
 int primos[2100000];
 
 void crivo()
 {
-  memset(nep, 0, sizeof nep);  
   for(int i = 3; i*i < MAX; i += 2){
     if(!nep[i]){
       for(int j = i*i; j < MAX; j += 2*i)
