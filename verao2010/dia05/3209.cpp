@@ -49,19 +49,6 @@ bool vai(ll n)
   return (n % 4 != 3);
 }
 
-void fatora(ll n)
-{
-  for(int i = 0; i < npr; i++){
-    int p = primos[i];
-    int c = 0;
-    while(n > 1 && (n % p == 0)){
-      n /= p;
-      c++;
-    }
-    if(c > 0) printf("%d^%d\n", p, c);
-  }
-}
-
 int main()
 {
   int casos;
@@ -73,7 +60,6 @@ int main()
     scanf(" %lld", &n);
     printf("%s\n", (vai(n) ? "YES" : "NO"));
     //printf("%lld %s\n", n, (vai(n) ? "YES" : "NO"));
-    //fatora(n);
   }
 
   return 0;
