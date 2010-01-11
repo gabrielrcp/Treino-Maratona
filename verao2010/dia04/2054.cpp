@@ -1,5 +1,3 @@
-//TLE! :/
-
 #include <cstdio>
 #include <set>
 #include <cstring>
@@ -62,8 +60,9 @@ void contrai()
   if(p != -1){
     S.erase(v[p]);
     int e = ultimo[p];
-    proximo[e] = grafo[f];    
-    ultimo[p] = ultimo[f];
+    proximo[e] = grafo[f];
+    if(ultimo[f] != -1)
+      ultimo[p] = ultimo[f];
     total += v[f].custo * v[p].tempo;
 
     v[p].tempo += v[f].tempo;
@@ -88,6 +87,7 @@ int main()
     }
     pai[raiz] = -1;
     memset(grafo, -1, sizeof grafo);
+    memset(ultimo, -1, sizeof ultimo);
     nume = 0;
     for(int i = 1; i < n; i++){
       int p, f;
@@ -95,26 +95,14 @@ int main()
       p--; f--;
       add_edge(p, f);
     }
-    /*
-    for(int i = 0; i < n; i++)
-      printf("%d %d\n", i+1, pai[i]+1);
-    */
     S.clear();
     for(int i = 0; i < n; i++){
       S.insert(v[i]);
     }
     total = 0;
     tat = 1;
-    while(!S.empty()){
-            
+    while(!S.empty()){            
       contrai();
-      //printf("%d %d\n", total, tat);
-      /*
-      for(set<no>::iterator it = S.begin(); it != S.end(); it++){
-	printf("%d %d %d\n", it->id+1, it->custo, it->tempo);
-      }
-      printf("\n");
-      */
     }
     printf("%d\n", total);
   }
