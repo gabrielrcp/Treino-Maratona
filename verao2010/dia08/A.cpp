@@ -17,32 +17,22 @@ ll S[MAX], V[MAX];
 
 ll resp[MAX];
 
-struct frac{
-  ll n, d;
-  bool operator< (const frac &f){
-    return n * f.d < f.n * d;
-  }
-  bool operator<= (const frac &f){
-    return n * f.d <= f.n * d;
-  }
-};
-
 struct reta{
   ll a, b;
-  frac x0;
+  ll x0;
 };
 
 reta pilha[MAX];
 int topo;
 
+
 ll busca(ll x)
 {
-  frac f = (frac){x, 1};
   int e = 1, d = topo - 1;
   int r = 0;
   while(e <= d){
     int m = (d+e)/2;
-    if(pilha[m].x0 <= f){
+    if(pilha[m].x0 <= x){
       r = m;
       e = m + 1;
     } else
@@ -52,16 +42,19 @@ ll busca(ll x)
   return (pilha[r].a * x + pilha[r].b);
 }
 
-frac cruza(reta x, reta y)
+ll cruza(reta x, reta y)
 {
-  frac f;
-  f.n = y.b - x.b;
-  f.d = x.a - y.a;
-  if(f.d < 0){
-    f.d = -f.d;
-    f.n = -f.n;
+  ll num = y.b - x.b;
+  ll den = x.a - y.a;
+  if(den < 0){
+    den = -den;
+    num = -num;
   }
-  return f;  
+  if(num < 0)
+    return num;
+  ll r = num/den;
+  if(num % den != 0) r++;
+  return r;
 }
 
 int busca2(reta nova)
@@ -70,7 +63,7 @@ int busca2(reta nova)
   int r = topo;
   while(e <= d){
     int m = (e+d)/2;
-    frac c = cruza(nova, pilha[m]);
+    ll c = cruza(nova, pilha[m]);
     if(pilha[m].x0 < c){ // mantem a reta m
       e = m + 1;
     } else{
@@ -109,8 +102,10 @@ void dfs(int i, int p)
     //printf("%d %lld\n", i, resp[i]);
   }
 
+  if(G[i].size() == 0) return;
+
   //insere a resposta na estrutura
-  reta nova = (reta){-dist[i], resp[i], (frac){0, 1}};
+  reta nova = (reta){-dist[i], resp[i], 0};
   int vltopo = topo;
   topo = busca2(nova);
   if(topo > 0)
