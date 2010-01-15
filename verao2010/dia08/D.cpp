@@ -12,9 +12,9 @@ int N;
 
 int S[32*32];
 
-int lim(int l)
+inline int lim(int l)
 {
-  return l*l/2;
+  return l*(l-1)/2;
 }
 
 int main()
@@ -28,8 +28,10 @@ int main()
     for(int l2 = 0; l1+l2 <= N; l2++)
       for(int i = 0; i <= l1*l2; i++){
 	int &at = D[l1][l2][i];
-	if(l1 == 0 || l2 == 0 || i == 0)
+	if(i == 0)
 	  at = 1;
+	else if(l1 == 0 || l2 == 0)
+	  at = 0;
 	else{
 	  at = D[l1-1][l2][i];
 	  if(i >= l1){
