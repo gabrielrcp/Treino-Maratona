@@ -1,3 +1,5 @@
+// errado, olhar o certo no dia 11
+
 #include <cstdio>
 #include <algorithm>
 #include <vector>
