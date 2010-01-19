@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -8,25 +9,13 @@ using namespace std;
 typedef long long ll;
 #define INF (1<<30)
 
-struct retangulo{
-  int id;
-  int x1, y1, x2, y2;
-  ll v, resp;
-};
-
-retangulo rect[MAX];
+int left[MAX], right[MAX], down[MAX], up[MAX];
+ll soma[MAX], val[MAX];
 int n;
-
-
-bool compara(const retangulo &a, const retangulo &b)
-{
-  if(a.x1 == b.x1)
-    return a.y1 > b.y1;
-  return a.x1 < b.x1;
-}
 
 ll bit[5*MAX];
 int M;
+
 
 ll get(int p)
 {
@@ -46,58 +35,64 @@ void update(int p, ll x)
   }
 }
 
-int proximo[MAX];
-int allY[5*MAX];
-
 int main()
 {
-  //freopen("rects.in", "r", stdin);
-  //freopen("rects.out", "w", stdout);
+  freopen("rects.in", "r", stdin);
+  freopen("rects.out", "w", stdout);
  
   scanf(" %d", &n);
-  int M = 0;
+  vector<int> allY;
   for(int i = 0; i < n; i++){
-    scanf(" %d %d %d %d %lld", &rect[i].x1, &rect[i].y1,
-	  &rect[i].x2, &rect[i].y2, &rect[i].v);
-    rect[i].id = i+1;
-    allY[M++] = rect[i].y1;
-    allY[M++] = rect[i].y2;
+    scanf(" %d %d %d %d %lld", left+i, down+i, right+i, up+i, val+i);
+    allY.push_back(down[i]);
+    allY.push_back(up[i]);
   }
-  allY[M++] = -INF;
-  allY[M++] = INF;
+  allY.push_back(-INF);
+  allY.push_back(INF);
 
+  sort(allY.begin(), allY.end());
+  unique(allY.begin(), allY.end());
+  M = allY.size();
 
-  sort(allY, allY+M);
-  M = unique(allY, allY+M) - allY;
+  for(int i = 0; i < n; i++){
+    up[i] = (int)(lower_bound(allY.begin(), allY.end(), up[i]) - allY.begin());
+    down[i] = (int)(lower_bound(allY.begin(), allY.end(), down[i]) - allY.begin());
+  }
+
+  vector<pair < int, pair<int,int> > > v;
   
   for(int i = 0; i < n; i++){
-    rect[i].y1 = (int)(lower_bound(allY, allY+M, rect[i].y1) - allY);
-    rect[i].y2 = (int)(lower_bound(allY, allY+M, rect[i].y2) - allY);
+    v.push_back(make_pair(left[i] , make_pair( 0, i ) ));
+    v.push_back(make_pair(right[i] , make_pair( 1, i ) ));
   }
-  
-  sort(rect, rect+n, compara);
-  memset(proximo, -1, sizeof proximo);
+  sort(v.begin(), v.end());
+
   memset(bit, 0, sizeof bit);
       
   ll resp = 0;
-  for(int i = n-1; i>= 0; i--){
-    rect[i].resp = get(rect[i].y1) + rect[i].v;
-    resp = max(resp, rect[i].resp);
-    update(rect[i].y2+1, rect[i].resp);
-    printf("-- %d %lld\n", rect[i].id, rect[i].resp);
+  for(int ii = (int)v.size()-1; ii>= 0; ii--){
+    int i = v[ii].second.second;
+    if(v[ii].second.first == 0) //left
+      update(up[i]+1, soma[i]);
+    else{
+      soma[i] = get(down[i]) + val[i];
+      resp = max(resp, soma[i]);
+    //printf("-- %d %lld\n", rect[i].id, rect[i].resp);
+    }
   }
 
   printf("%lld\n", resp);
-  int x = -INF, y = -INF;
-  for(int i = 0; i < n; i++){
-    if(rect[i].resp == resp && rect[i].x1 > x && rect[i].y1 > y){
-      printf("%d ", rect[i].id);
-      resp -= rect[i].v;
-      x = rect[i].x2;
-      y = rect[i].y2;
+  int x = -INF, y = INF;
+  for(int j = 0; j < (int)v.size(); j++){
+    if(v[j].second.first == 0) continue;
+    int i = v[j].second.second;
+    if(soma[i] == resp && left[i] > x && up[i] < y){
+      printf("%d ", i+1);
+      resp -= val[i];
+      x = right[i];
+      y = down[i];
     }
   }
   printf("\n");
-
   return 0;
 }

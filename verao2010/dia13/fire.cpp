@@ -1,28 +1,133 @@
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
+#include <list>
+#include <iostream>
 
 using namespace std;
 
 #define MAX 210
-
-int vx[MAX];
-int vy[MAX];
-int px[MAX];
-int py[MAX];
-
-int n, k;
+#define EPS (1.0e-9)
 
 
-double dist2(double x, double y)
+struct ponto{
+  double x, y;
+};
+
+ponto operator+(ponto a, ponto b)
 {
-  double r = 1.0e100;
-  for(int i = 0; i < k; i++){
-    double dx = x-px[i];
-    double dy = y-py[i];
-    r = min(r, dx*dx+dy*dy);
+  ponto p;
+  p.x = a.x+b.x;
+  p.y = a.y+b.y;
+  return p;
+}
+
+ponto operator-(ponto a, ponto b)
+{
+  ponto p;
+  p.x = a.x-b.x;
+  p.y = a.y-b.y;
+  return p;
+}
+
+ponto operator*(ponto p, double a)
+{
+  p.x *= a;
+  p.y *= a;
+  return p;
+}
+ponto operator/(ponto p, double a)
+{
+  p.x /= a;
+  p.y /= a;
+  return p;
+}
+
+ponto ortog(ponto p)
+{
+  ponto novo;
+  novo.x = p.y;
+  novo.y = -p.x;
+  return novo;
+}
+
+double prod(ponto a, ponto b)
+{
+  return a.x*b.y - a.y*b.x;
+}
+
+char left(ponto a, ponto b)
+{
+  return ((prod(a, b) > EPS) ? 1 : 0);
+}
+
+ponto pts[MAX];
+int n;
+
+
+double dist(ponto a, ponto b)
+{
+  double dx = a.x - b.x;
+  double dy = a.y - b.y;
+  return dx*dx + dy*dy;
+}
+
+bool operator!= (ponto a, ponto b)
+{
+  double dx = a.x - b.x;
+  double dy = a.y - b.y;
+
+  return (!(-EPS < dx  && dx < EPS && -EPS < dy && dy < EPS));
+}
+
+ponto interseccao(ponto p1, ponto v1, ponto p2, ponto v2)
+{
+  double A1 = v1.x;
+  double B1 = -v2.x;
+  double C1 = p2.x - p1.x;
+  double A2 = v1.y;
+  double B2 = -v2.y;
+  double C2 = p2.y - p1.y;
+
+  double det = A1 * B2 - B1 * A2;
+  double t1 = (C1 * B2 - B1 * C2) / det;
+  //double t2 = A1 * C2 - C1 * A2 / det;
+
+  ponto p;
+  p.x = p1.x + t1*v1.x;
+  p.y = p1.y + t1*v1.y;
+  return p;
+}
+
+void adiciona(list<ponto> &pol, ponto a, ponto b)
+{
+  ponto meio = (a + b)*0.5;
+  ponto vetor = ortog(b - a);
+
+  list<ponto>::iterator it, prox;
+  for(it = pol.begin(); it != pol.end(); it++){
+    prox = it; prox++;
+    if(prox == pol.end()) prox = pol.begin();
+    if(left(vetor, *it - meio) != left(vetor, *prox - meio)){
+      ponto p = interseccao(meio, vetor, *it, *prox - *it);
+      if(p != *prox && p != *it)
+	pol.insert(prox, p);
+    }
   }
-  return r;
+
+  char ori = left(vetor, a - meio);
+  it = pol.begin();
+  while(it != pol.end()){
+    prox = it; prox++;
+    if(left(vetor, *it - meio) != ori)
+      pol.erase(it);
+    it = prox;
+  }
+}
+
+void imprime(ponto p)
+{
+  printf("%f %f\n", p.x, p.y);
 }
 
 int main()
@@ -30,36 +135,38 @@ int main()
   freopen("fire.in", "r", stdin);
   freopen("fire.out", "w", stdout);
 
+  list<ponto> pol;
+  scanf(" %d", &n);
+  while(n--){
+    ponto p;
+    scanf(" %lf %lf", &p.x, &p.y);
+    pol.push_back(p);
+  }
   scanf(" %d", &n);
   for(int i = 0; i < n; i++)
-    scanf(" %d %d", vx+i, vy+i);
-  memset(dist, 0x3f, sizeof dist);
+    scanf(" %lf %lf", &pts[i].x, &pts[i].y);
 
-  scanf(" %d", &k);
+  ponto resp;
+  double melhor = -1.0;
 
-  for(int i = 0; i < k;; i++)
-    scanf(" %d %d", px+i, py+i);
-
-  double rx = vx[0], ry = vy[0];
-  double rd = dist(vx[0], vy[0]);
-  for(int i = 1; i < n; i++){
-    double t = dist(vx[i], vy[i]);
-    if(t > rd){
-      rx = vx[i];
-      ry = vy[i];
-      rd = t;
+  for(int i = 0; i < n; i++){
+    list<ponto> temp = pol;
+    //printf("%d\n", (int)temp.size());
+    for(int j = 0; j < n; j++){
+      if(i == j) continue;
+      adiciona(temp, pts[i], pts[j]);
+      //printf("%d\n", (int)temp.size());
     }
+    //printf("----\n");
+    for(list<ponto>::iterator it = temp.begin(); it != temp.end(); it++){
+      double t = dist(*it, pts[i]);
+      if(t > melhor){
+	melhor = t;
+	resp = *it;
+      }
+    } 
   }
-
-  int r = 0;
-  for(int i = 1; i < n; i++)
-    if(dist[i] > dist[r])
-      r = i;
-  printf("%d %d\n", vx[r], vy[r]);
-
-  /*
-  for(int i = 0; i < n; i++)
-    printf("%d %d %d\n", vx[i], vy[i], dist[i]);
-  */
+  
+  printf("%.8f %.8f\n", resp.x, resp.y);
   return 0;
 }
