@@ -27,8 +27,7 @@ public class dinner
 		Integer jj = new Integer(j);
 		table[i][j] = table[i][j].multiply(new BigInteger(jj.toString()));
 	    }
-	String s = table[n][k].toString();
-	outS.write(s, 0, s.length());
+	outS.write(table[n][k].toString());
 	outS.newLine();
 	outS.close();
     }
