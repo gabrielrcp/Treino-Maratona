@@ -1,51 +1,63 @@
 #include <cstdio>
 #include <bitset>
 #include <set>
+#include <map>
+#include <algorithm>
 
 using namespace std;
 
+#define MAX (310)
 typedef long long ll;
 
-const int MAXN = 310;
-const double EPS = 1e-9;
-
-struct Point { int x,y; Point(int x=0, int y=0) : x(x), y(y) {} };
-
-int n;
-struct B {
-  bitset<MAXN> b;
-  bool operator<(const B& o) const {
-    for (int i=0; i < n; ++i)
-      if (b[i]!=o.b[i])
-	return b[i]<o.b[i];
-    return false;
-  }
-  void set(int n) { b.set(n); }
-  void print() const{
-    for (int i = 0; i < n; ++i) if (b[i]) printf("%d ", i);
-    puts("");
+struct reta{
+  ll A, B, C;
+  bool operator< (const reta &r) const{
+    if(A == r.A){
+      if(B == r.B)
+	return (C < r.C);
+      return (B < r.B);
+    }
+    return (A < r.A);
   }
 };
 
-Point p[MAXN];
-set< B > s;
+struct ponto{
+  int x, y;
+};
 
-int ccw(Point& a, Point& b, Point& c) {
-  int p = a.x*b.y+b.x*c.y+c.x*a.y;
-  int n = a.y*b.x+b.y*c.x+c.y*a.x;
-  return p - n;
-}
-
-Point ortog(Point a)
+ll gcd(ll a, ll b)
 {
-  int t = a.x;
-  a.x = -a.y;
-  a.y = t;
-  return a;
+  if(a < b) return gcd(b, a);
+  if(b == 0) return a;
+  return gcd(b, a%b);
 }
 
+reta cruza(ponto a, ponto b)
+{
+  reta r;
+  r.A = - (b.y - a.y);
+  r.B = b.x - a.x;
+  r.C = a.x * (b.y - a.y) - a.y * (b.x - a.x);
+  ll m = gcd(abs(r.A), abs(r.B));
+  m = gcd(m, abs(r.C));
 
-int main() {
+  r.A /= m;
+  r.B /= m;
+  r.C /= m;
+  
+  if(r.A < 0 || (r.A == 0 && r.B < 0)){
+    r.A = -r.A;
+    r.B = -r.B;
+    r.C = -r.C;
+  }
+  return r;
+}
+
+ponto p[MAX];
+int n;
+
+int main() 
+{
   freopen("cottages.in","r",stdin);
   freopen("cottages.out","w",stdout);
 
@@ -54,48 +66,20 @@ int main() {
     scanf("%d %d", &p[i].x, &p[i].y);
   }
 
-  B all, empty;
-  for (int i = 0; i < n; ++i) {
-    all.set(i);
-    for (int j = 0; j < n; ++j) {
-      if(i == j) continue;
-      Point a(p[i].x, p[i].y);
-      Point b(p[j].x, p[j].y);
-      Point ort(b.x-a.x, b.y-a.y);
-      ort = ortog(ort);
-      ort.x += a.x;
-      ort.y += a.y;
-      Point c (2*b.x-a.x, 2*b.y-a.y);
+  map<reta, set<int> > M;
 
-      B bs;
-      for(int k = 0; k < n; k++){
-	if(k == i || k == j) continue;
-	if(ccw(a, b, p[k]) < 0){
-	  bs.set(k);
-	} else if(ccw(a, b, p[k]) == 0){
-	  if((ll)ccw(a, ort, b) * (ll)ccw(a, ort, p[k]) < 0)
-	    bs.set(k);
-	}
-      }
-      bs.set(i);
-      s.insert(bs);
-
-      ort.x += b.x - a.x;
-      ort.y += b.y - a.y;
-
-      for(int k = 0; k < n; k++){
-	if(k == i || k == j) continue;
-	if(ccw(a, b, p[k]) == 0){
-	  if((ll)ccw(b, ort, c) * (ll)ccw(b, ort, p[k]) < 0)
-	    bs.set(k);
-	}
-      }
-      bs.set(j);
-      s.insert(bs);
+  for(int i = 0; i < n; i++){
+    for(int j = i+1; j < n; j++){
+      reta r = cruza(p[i], p[j]);
+      M[r].insert(i);
+      M[r].insert(j);
     }
   }
 
-  int res = s.size() - s.count(all) - s.count(empty);
-  printf("%d\n", res);
+  int res = 0;
+  for(map<reta, set<int> >::iterator it = M.begin(); it != M.end(); it++){
+    res += (it->second).size() - 1;
+  }
+  printf("%d\n", 2*res);
   return 0;
 }
