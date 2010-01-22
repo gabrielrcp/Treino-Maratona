@@ -118,7 +118,8 @@ int main()
 
     int resp = (1<<30);
     for(int i = 0; i < n; i++)
-      for(int j = i+1; j < n; j++){
+      for(int j = 0; j < n; j++){
+	if(i == j) continue;
 	memset(lado, 0, n*sizeof(char));
 	for(int k = 0; k < n; k++)
 	  lado[k] = left(i, j, k);
