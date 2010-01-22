@@ -7,7 +7,7 @@ using namespace std;
 #define MAX 155
 
 struct ponto{
-  int x, y;
+  long long x, y;
   bool operator<(const ponto &p) const{
     if(x == p.x)
       return (y < p.y);
@@ -20,31 +20,25 @@ struct ponto{
 
 ponto P[MAX];
 int n;
-
 char lado[MAX];
 
+long long prod(ponto p1, ponto p2, ponto p3)
+{
+  long long x1 = p2.x - p1.x;
+  long long y1 = p2.y - p1.y;
+  long long x2 = p3.x - p1.x;
+  long long y2 = p3.y - p1.y;
+  return x1*y2 - x2*y1;
+}
 
 bool left(ponto p1, ponto p2, ponto p3)
 {
-  int x1 = p2.x - p1.x;
-  int y1 = p2.y - p1.y;
-  int x2 = p3.x - p1.x;
-  int y2 = p3.y - p1.y;
-  return ((x1*y2 - x2*y1) > 0);
+  return (prod(p1,p2,p3) > 0);
 }
 
 char left(int i, int j, int k)
 {
   return (left(P[i], P[j], P[k]) ? 1 : 0);
-}
-
-int prod(ponto p1, ponto p2, ponto p3)
-{
-  int x1 = p2.x - p1.x;
-  int y1 = p2.y - p1.y;
-  int x2 = p3.x - p1.x;
-  int y2 = p3.y - p1.y;
-  return x1*y2 - x2*y1;
 }
 
 ponto pp[MAX];
@@ -62,9 +56,9 @@ bool compara(const ponto &p1, const ponto &p2)
   return left(pivo, p1, p2);
 }
 
-int fecho()
+long long fecho()
 {
-  if(np <= 2) return false;
+  if(np <= 2) return 0;
   pivo = pp[0];
   for(int i = 1; i < np; i++)
     pivo = min(pivo, pp[i]);
@@ -80,15 +74,16 @@ int fecho()
     pilha[topo++] = pp[i];
   }
 
-  int a = 0;
-  for(int i = 0; i+1 < np; i++)
-    a += prod(pp[0], pp[i], pp[i+1]);
-  return abs(a);
+  long long a = 0;
+  for(int i = 1; i+1 < topo; i++)
+    a += prod(pilha[0], pilha[i], pilha[i+1]);
+  if(a < 0) a = -a;
+  return a;
 }
 
-int resolve()
+long long resolve()
 {
-  int resp = 0;
+  long long resp = 0;
   np = 0;
   for(int i = 0; i < n; i++)
     if(lado[i])
@@ -114,19 +109,21 @@ int main()
     if(n == 0) break;
 
     for(int i = 0; i < n; i++)
-      scanf(" %d %d", &P[i].x, &P[i].y);
+      scanf(" %lld %lld", &P[i].x, &P[i].y);
 
-    int resp = (1<<30);
+    long long resp = (1LL<<60);
     for(int i = 0; i < n; i++)
       for(int j = 0; j < n; j++){
 	if(i == j) continue;
-	memset(lado, 0, n*sizeof(char));
+	memset(lado, 0, sizeof lado);
 	for(int k = 0; k < n; k++)
 	  lado[k] = left(i, j, k);
 	resp = min(resp, resolve());
+	lado[i] = 1;
+	resp = min(resp, resolve());
       }
     
-    printf("Farm %d: %d.%d\n", h, resp/2, ((resp&1) ? 5 : 0));
+    printf("Farm %d: %lld.%d\n", h, resp/2, ((resp%2==1) ? 5 : 0));
   }
   return 0;
 }
