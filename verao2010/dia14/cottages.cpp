@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <bitset>
 #include <set>
 #include <map>
 #include <algorithm>
@@ -22,11 +21,13 @@ struct reta{
 };
 
 struct ponto{
-  int x, y;
+  ll x, y;
 };
 
 ll gcd(ll a, ll b)
 {
+  if(a < 0) a = -a;
+  if(b < 0) b = -b;
   if(a < b) return gcd(b, a);
   if(b == 0) return a;
   return gcd(b, a%b);
@@ -38,8 +39,9 @@ reta cruza(ponto a, ponto b)
   r.A = - (b.y - a.y);
   r.B = b.x - a.x;
   r.C = a.x * (b.y - a.y) - a.y * (b.x - a.x);
-  ll m = gcd(abs(r.A), abs(r.B));
-  m = gcd(m, abs(r.C));
+
+  ll m = gcd(r.A, r.B);
+  m = gcd(m, r.C);
 
   r.A /= m;
   r.B /= m;
@@ -63,7 +65,7 @@ int main()
 
   scanf("%d", &n);
   for (int i = 0; i < n; ++i) {
-    scanf("%d %d", &p[i].x, &p[i].y);
+    scanf("%lld %lld", &p[i].x, &p[i].y);
   }
 
   map<reta, set<int> > M;
