@@ -119,8 +119,6 @@ int main()
 	for(int k = 0; k < n; k++)
 	  lado[k] = left(i, j, k);
 	resp = min(resp, resolve());
-	lado[i] = 1;
-	resp = min(resp, resolve());
       }
     
     printf("Farm %d: %lld.%d\n", h, resp/2, ((resp%2==1) ? 5 : 0));
