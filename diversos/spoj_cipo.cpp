@@ -9,9 +9,18 @@ using namespace std;
 typedef pair<int, int> pii;
 
 vector<pii> art[3];
-int cor[MAX];
 
 int custo[3] = { 1235, 8977, 10923};
+
+int pai[MAX];
+
+int find(int x)
+{
+  if(x == pai[x])
+    return x;
+  pai[x] = find(pai[x]);
+  return pai[x];
+}
 
 int main()
 {
@@ -25,7 +34,7 @@ int main()
       break;
 
     for(int i = 0; i < n; i++)
-      cor[i] = i;
+      pai[i] = i;
     for(int i = 0; i < 3; i++)
       art[i].clear();
 
@@ -51,13 +60,11 @@ int main()
       for(int k = 0; k < art[l].size(); k++){
 	int i = art[l][k].first;
 	int j = art[l][k].second;
-	if(cor[i] != cor[j]){
+	int pi = find(i);
+	int pj = find(j);
+	if(pi != pj){
 	  resp += custo[l];
-	  int c = cor[j];
-	  for(int p = 0; p < n; p++){
-	    if(cor[p] == c)
-	      cor[p] = cor[i];
-	  }
+	  pai[pi] = pj;
 	}
       }
     }
