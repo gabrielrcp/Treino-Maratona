@@ -15,7 +15,6 @@ typedef long long ll;
 int grafo[MAXV];
 int vert[MAXE];
 int cap[MAXE];
-int fluxo[MAXE];
 int prox[MAXE];
 int nume;
 int n;
@@ -29,7 +28,6 @@ void _add_edge(int i, int j, int cp)
   int e = nume++;
   prox[e] = grafo[i];
   grafo[i] = e;
-  fluxo[e] = 0;
   cap[e] = cp;
   vert[e] = j;
 }
@@ -51,22 +49,15 @@ bool calc_dist(int s, int t)
     int j = Q.front(); Q.pop();
     for(int e = grafo[j]; e  != -1; e = prox[e]){
       int i = vert[e];
-      if(fluxo[e^1] >= cap[e^1]) continue;
+      if(cap[e^1] <= 0) continue;
       if(dist[j] - dist[i] > 1){
 	dist[i] = dist[j] - 1;
 	Q.push(i);
       }
     }
   }
-  /*
-  for(int i = 0; i < n; i++)
-    printf("%d %d\n", i+1, dist[i]);
-  printf("\n");
-  */
   return (dist[s] != 0);
 }
-
-int P[MAXV];
 
 int aumenta_fluxo(int s, int t, int val = INF)
 {
@@ -75,13 +66,15 @@ int aumenta_fluxo(int s, int t, int val = INF)
   int e = pai[t];
   int j = vert[e^1];
 
-  val = aumenta_fluxo(s, j, min(val, cap[e] - fluxo[e]));
+  val = aumenta_fluxo(s, j, min(val, cap[e]));
 
-  fluxo[e] += val;
-  fluxo[e^1] -= val;
+  cap[e] -= val;
+  cap[e^1] += val;
 
   return val;
 }
+
+int P[MAXV];
 
 ll dinits(int s, int t)
 {
@@ -106,7 +99,7 @@ ll dinits(int s, int t)
       int &e = atual[i];
       while(e != -1){
 	int j = vert[e];
-	if(fluxo[e] < cap[e] && dist[j] - dist[i] == 1 && atual[j] != -1)
+	if(cap[e] > 0 && dist[j] - dist[i] == 1 && atual[j] != -1)
 	  break;
 	e = prox[e];
       }
