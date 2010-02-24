@@ -1,8 +1,6 @@
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
-#include <queue>
-#include <stack>
 
 using namespace std;
 
@@ -23,7 +21,7 @@ int pai[MAXV];
 int dist[MAXV];
 int atual[MAXV];
 
-void _add_edge(int i, int j, int cp)
+inline void _add_edge(int i, int j, int cp)
 {
   int e = nume++;
   prox[e] = grafo[i];
@@ -32,27 +30,28 @@ void _add_edge(int i, int j, int cp)
   vert[e] = j;
 }
 
-
-void add_edge(int i, int j, int cp)
+inline void add_edge(int i, int j, int cp)
 {
   _add_edge(i, j, cp);
   _add_edge(j, i, cp);
 }
 
+int Q[MAXV];
+
 bool calc_dist(int s, int t)
 {
-  memset(dist, 0, sizeof dist);
+  memset(dist, 0, n * sizeof(int));
   dist[t] = n;
-  queue<int> Q;
-  Q.push(t);
-  while(!Q.empty()){
-    int j = Q.front(); Q.pop();
+  int ini = 0, fim = 1;
+  Q[0] = t;
+  while(ini < fim){
+    int j = Q[ini++];
     for(int e = grafo[j]; e  != -1; e = prox[e]){
       int i = vert[e];
       if(cap[e^1] <= 0) continue;
       if(dist[j] - dist[i] > 1){
 	dist[i] = dist[j] - 1;
-	Q.push(i);
+	Q[fim++] = i;
       }
     }
   }
@@ -84,15 +83,15 @@ ll dinits(int s, int t)
 
     memcpy(atual, grafo, n*sizeof(int));
 
-    int topo = 0;
-    P[topo++] = s;
+    int topo = 1;
+    P[0] = s;
     while(topo > 0){
       int i = P[topo-1];
 
       if(i == t){
 	inten += aumenta_fluxo(s, t);
-	topo = 0;
-	P[topo++] = s;
+	topo = 1;
+	P[0] = s;
 	continue;
       }
 
@@ -123,7 +122,7 @@ int main()
   int s, t, m;
   scanf(" %d %d", &n, &m);
   nume = 0;
-  memset(grafo, -1, sizeof grafo);
+  memset(grafo, -1, n * sizeof(int));
 
   s = 0;
   t = n-1;
