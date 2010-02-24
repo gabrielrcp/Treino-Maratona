@@ -1,0 +1,1 @@
+CXXFLAGS= -Wall -g -O2
