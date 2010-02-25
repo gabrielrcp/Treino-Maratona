@@ -8,20 +8,21 @@ int main()
 {
   while(1){
     char c;
-    int i = 0;
+    int n = 1;
     while(!isdigit(c = getchar_unlocked()));
 
     buf[0] = c;
     while(isdigit(c = getchar_unlocked()))
-      buf[++i] = c;
+      buf[n++] = c;
+    buf[n] = '\0';
 
-    if(i == 0 && buf[0] == '0')
+    if(n == 1 && buf[0] == '0')
       break;
 
     printf("%s is", buf);
 
     int r = 0;
-    for(; i >= 0; i--){
+    for(int i = 0; i < n; i++){
       r = r*10 + buf[i]-'0';
       r %= 11;
     }
