@@ -22,6 +22,8 @@ int find(int x)
   return pai[x];
 }
 
+
+
 int main()
 {
   for(int h = 1; ; h++){
@@ -68,6 +70,7 @@ int main()
 	}
       }
     }
+    
     printf("Instancia %d\n%d\n\n", h, resp);
   }
 
