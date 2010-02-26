@@ -109,9 +109,13 @@ int main()
     int conta = 0;
     memset(num, 0, sizeof num);
 
+
+    int ult = 0;
     while(conta+1 < n){
-      int i = 0;
-      while(dist[i] == 0) i++; 
+      int i = ult;
+      while(dist[i] == 0) i++;
+      ult = i+1;
+
       dist[i] = 0;
       conta++;
 
