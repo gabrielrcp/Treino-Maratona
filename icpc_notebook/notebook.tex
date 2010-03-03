@@ -1,0 +1,73 @@
+\documentclass[landscape,twocolumn,a4paper]{article}
+
+\usepackage[left=.5cm,right=.5cm,top=1.5cm,bottom=.5cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+%\usepackage[brazil]{babel}
+
+\usepackage{listings}
+\lstset{extendedchars=\true,inputencoding=utf8}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[LE,LO]{Instituto de Matemática e Estatística da Universidade de São Paulo }
+\fancyhead[RE,RO]{\bfseries\thepage}
+
+
+\newcommand{\sourcefile}[1]{
+  \begin{center}
+    \textbf{#1}
+  \end{center}
+  \lstinputlisting{src/#1}
+}
+
+\newcommand{\Csourcefile}[1]{\lstinputlisting[language=C++]{src/#1.cpp}}
+
+\newcommand{\CODE}[2]{\section*{#1} \Csourcefile{#2} \rule{14cm}{0.25pt} \newpage }
+
+\newcommand{\C}[1]{\texttt{#1}}
+
+\title{ACM ICPC Team Reference}
+\date{\today}
+
+\setlength{\columnseprule}{0.25pt}
+
+\begin{document}
+\scriptsize{}
+\maketitle{}
+\thispagestyle{fancy}
+
+\CODE{Algebra} {algebra} 
+\CODE{RIT} {rit}
+\CODE{Combinatória} {combinatoria}
+\CODE{Crivo} {crivo}
+\CODE{Determinante} {determinante}
+\CODE{Dijkstra} {dijkstra}
+\CODE{Floyd} {floyd}
+\CODE{Fração} {fracao}
+\CODE{Geometry} {geometry}
+\CODE{Matching} {matching}
+\CODE{Matriz} {matriz}
+\CODE{Maxflow Dinitz} {maxflow-dinitz}
+\CODE{Maxflow Edmonds Karp} {maxflow-list}
+\CODE{Maxflow Mincost} {maxflow-mincost}
+\CODE{Suffix Array} {suffix-array}
+\CODE{Mincut Stoer-Wagner} {mincut}
+\CODE{Triângulo de pascal} {pascal}
+\CODE{Polinômio} {polinomio}
+\CODE{Prim} {prim}
+\CODE{Sistema linear} {sistema-linear}
+\CODE{Union-Find} {union-find}
+\CODE{Raiz Polinomio}  {verifica-raiz-polinomio} 
+\CODE{KMP} {kmp}
+\CODE{Pontes} {pontes}
+\CODE{Componentes fortemente conexas} {fort-conexas}
+\CODE{Primos grandes} {primos}
+\CODE{Primos} {primos2}
+\CODE{Inteiros Grandes}{big-integer}
+
+\end{document}
+
+
