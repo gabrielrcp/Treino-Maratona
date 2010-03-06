@@ -1,5 +1,8 @@
 #include <cstdio>
 #include <cstring>
+#include <algorithm>
+
+using namespace std;
 
 struct resposta{
   int conta[10];
@@ -15,15 +18,6 @@ struct resposta{
 };
 
 resposta memo[30][30];
-
-void confere(resposta &at, resposta &r)
-{
-  if(at < r){
-    r.numdig = at.numdig;
-    for(int i = 2; i < 10; i++)
-      r.conta[i] = at.conta[i];
-  }
-}
 
 resposta pd(int c2, int c3)
 {
@@ -42,25 +36,25 @@ resposta pd(int c2, int c3)
     at = pd(c2-3, c3);
     at.numdig++;
     at.conta[8]++;
-    confere(at, r);
+    r = min(r, at);
   }
   if(c2 >= 2){
     at = pd(c2-2, c3);
     at.numdig++;
     at.conta[4]++;
-    confere(at, r);
+    r = min(r, at);
   }
   if(c3 >= 2){
     at = pd(c2, c3-2);
     at.numdig++;
     at.conta[9]++;
-    confere(at, r);
+    r = min(r, at);
   }
   if(c2 >= 1 && c3 >= 1){
     at = pd(c2-1, c3-1);
     at.numdig++;
     at.conta[6]++;
-    confere(at, r);
+    r = min(r, at);
   }
 
   return r;
