@@ -8,13 +8,17 @@ int divide[MAX];
 void crivo()
 {
   memset(divide, -1, sizeof divide);
-  for(int i = 2; i <= MAX/i; i++){
+
+  for(int i = 2; i < MAX; i += 2)
+    divide[i] = 2;
+
+  for(int i = 3; i*i < MAX; i += 2){
     if(divide[i] != -1) continue;
-    for(int j = i; j < MAX; j += i){
-      divide[j] = i;
+    for(int j = i*i; j < MAX; j += 2*i){
+      if(divide[j] == -1) divide[j] = i;
     }
   }
-  for(int i = 2; i < MAX; i++)
+  for(int i = 3; i < MAX; i += 2)
     if(divide[i] == -1) divide[i] = i;
 }
 
