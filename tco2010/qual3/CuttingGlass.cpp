@@ -81,16 +81,35 @@ void preenche(int x, int y, vector<string> &prog)
 
 void vai(int x, int y)
 {
-  if(vis[x][y]) return;
+  queue< pair<int, int> > Q;
+  Q.push(make_pair(x, y));
   vis[x][y] = 1;
-  if(!vert[x+1][y])
-    vai(x+1, y);
-  if(!horiz[x][y+1])
-    vai(x, y+1);
-  if(!vert[x][y])
-    vai(x-1, y);
-  if(!horiz[x][y])
-    vai(x, y-1);
+
+  while(!Q.empty()){
+    x = Q.front().first;
+    y = Q.front().second;
+    Q.pop();
+
+    if(!vert[x+1][y] && !vis[x+1][y]){
+      vis[x+1][y] = 1;
+      Q.push(make_pair(x+1, y));
+    }
+
+    if(!horiz[x][y+1] && !vis[x][y+1]){
+      vis[x][y+1] = 1;
+      Q.push(make_pair(x, y+1));
+    }
+
+    if(!vert[x][y] && !vis[x-1][y]){
+      vis[x-1][y] = 1;
+      Q.push(make_pair(x-1,y));
+    }
+
+    if(!horiz[x][y] && !vis[x][y-1]){
+      vis[x][y-1] = 1;
+      Q.push(make_pair(x, y-1));
+    }
+  }
 }
 
 int CuttingGlass::pieces(int W, int H, int startx, int starty, vector <string> program)
