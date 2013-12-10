@@ -1,4 +1,3 @@
-/* WA */
 #include <cstdio>
 #include <iostream>
 #include <string>
@@ -15,7 +14,7 @@
 
 using namespace std;
  
-typedef unsigned long long ll;
+typedef long long ll;
 typedef pair<int, int> pii;
 
 
@@ -41,13 +40,13 @@ int main()
     scanf(" %s %lld", leters, &N);
     pot[0] = 1;
     num = (ll)strlen(leters);
-    pot[1] = num;
-    int size = 1;
-    while(pot[size] < N && pot[size] > 0){
+    int size = 0;
+    while(pot[size] < N/num){
       pot[size+1] = num * pot[size];
-      N -= pot[size];
+      N -= pot[size+1];
       size++;
     }
+    size++;
 
     printf("Case #%d: ", h);
     imprime(size);
