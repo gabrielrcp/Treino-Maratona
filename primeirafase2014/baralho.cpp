@@ -7,14 +7,27 @@
 
 #include <cstdio>
 #include <cstring>
-#include <set>
 
 using namespace std;
 
 #define MAX (200010)
 
+typedef long long ll;
+
 int v[MAX];
 char vis[MAX];
+
+ll gcd(ll a, ll b)
+{
+  if(a < b) return gcd(b, a);
+  if(b == 0) return a;
+  return gcd(b, a%b);
+}
+
+ll mmc(ll a, ll b)
+{
+  return a*b/gcd(a, b);
+}
 
 int new_pos(int i, int n)
 {
@@ -38,13 +51,13 @@ int main()
       v[i] = new_pos(i, p/2);
     memset(vis, 0, p*sizeof(char));
     
-    set<int> S;
+    ll r = 1;
     for(int i = 0; i < p; i++){
-      int r  = go(i);
-      if(r > 0)
-	S.insert(r);
+      ll t = go(i);
+      if(t != 0)
+	r = mmc(r, t);
     }
-    printf("%d\n", *S.rbegin());
+    printf("%lld\n", r);
   }
 
   return 0;
